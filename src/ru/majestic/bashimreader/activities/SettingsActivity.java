@@ -1,10 +1,7 @@
 package ru.majestic.bashimreader.activities;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import ru.majestic.bashimreader.R;
-import ru.majestic.bashimreader.ads.AdsDisableManager;
+import ru.majestic.bashimreader.billing.GoogleBillingManager;
 import ru.majestic.bashimreader.datebase.QuotesDatebaseManager;
 import ru.majestic.bashimreader.managers.QuotesManager;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
@@ -29,9 +26,12 @@ import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 
-public class SettingsActivity extends Activity implements OnClickListener, OnItemSelectedListener {
-
-	private ScrollView 	rootLayout;
+public class SettingsActivity extends Activity implements 	OnClickListener, 
+															OnItemSelectedListener {	
+	
+	private static final int DISABLE_ADS_ACTIVITY_REQUEST_CODE = 1001;
+	
+	private ScrollView 		rootLayout;
 	private RelativeLayout 	mainHeaderLyt;
 	private TextView 		mainHeaderTxt;
 	private TextView 		h2TxtView, h2TxtCache, h2TxtAbout;
@@ -45,26 +45,15 @@ public class SettingsActivity extends Activity implements OnClickListener, OnIte
 	private Button			disableAdsBtn;
 
 	private QuotesManager 			quotesManager;
-	private ApplicationSettings 	applicationSettings;
-	private AdsDisableManager		adsDisableManager;
+	private ApplicationSettings 	applicationSettings;	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		quotesManager 			= new QuotesManager(savedInstanceState, this);
-		applicationSettings 	= new ApplicationSettings(this);
-		adsDisableManager		= new AdsDisableManager(this);
-		adsDisableManager.init();
-				
-		initGUI();
-		versionValueTxt.setText(ApplicationUtils.getApplicationVersionName(this));
-	}	
-	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		adsDisableManager.deinit();
-	}
+		applicationSettings 	= new ApplicationSettings(this);								
+		initGUI();				
+	}			
 
 	private void initGUI() {
 		setContentView(R.layout.activity_settings);
@@ -98,8 +87,11 @@ public class SettingsActivity extends Activity implements OnClickListener, OnIte
 		fontSizeSpinner.setSelection(applicationSettings.getQuotesTextArrayIndex());
 		fontSizeSpinner.setOnItemSelectedListener(this);
 		toggleNightModeBtn.setOnClickListener(this);
-		disableAdsBtn.setOnClickListener(this);
-
+		disableAdsBtn.setOnClickListener(this);		
+		
+		versionValueTxt.setText(ApplicationUtils.getApplicationVersionName(this));
+		changeGUIForDisablingAds(GoogleBillingManager.getInstance().isAdsDisabled());
+		
 		refreshNightModeBtnText();
 		initNightMode();
 	}
@@ -140,10 +132,10 @@ public class SettingsActivity extends Activity implements OnClickListener, OnIte
 			initNightMode();
 			break;
 			
-		case R.id.settings_btn_disable_ads:
-			PendingIntent disableAdsPengingIntent = adsDisableManager.getPendingIntentForDisableAds();
+		case R.id.settings_btn_disable_ads:			
 			try {
-				startIntentSenderForResult(disableAdsPengingIntent.getIntentSender(), 1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0));
+				PendingIntent disableAdsPengingIntent = GoogleBillingManager.getInstance().getPendingIntentForDisableAds();
+				startIntentSenderForResult(disableAdsPengingIntent.getIntentSender(), DISABLE_ADS_ACTIVITY_REQUEST_CODE, new Intent(), 0, 0, 0);
 			} catch (SendIntentException e) {
 				Log.e("ADS_DISABLER", e.toString());
 			}
@@ -230,24 +222,23 @@ public class SettingsActivity extends Activity implements OnClickListener, OnIte
 
 	@Override
 	public void onNothingSelected(AdapterView<?> arg0) {
+		//.
 	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 1001) {
-			int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
-			String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
-			String dataSignature = data.getStringExtra("INAPP_DATA_SIGNATURE");
-
-			if (resultCode == RESULT_OK) {
-				try {
-					JSONObject jo = new JSONObject(purchaseData);
-					String sku = jo.getString("productId");
-					Log.i("ADS_DISABLER", "You bought: " + sku);
-				} catch (JSONException e) {
-					Log.e("ADS_DISABLER", "Error: " + e.toString());
-				}
-			}
+		if (requestCode == DISABLE_ADS_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+			changeGUIForDisablingAds(GoogleBillingManager.getInstance().isAdsDisabled());
+		}
+	}
+	
+	private void changeGUIForDisablingAds(boolean isAdsDisabled) {
+		if(isAdsDisabled) {
+			disableAdsTxt.setText("Реклама отключена");
+			disableAdsBtn.setVisibility(View.GONE);
+		} else {
+			disableAdsTxt.setText("Отключение рекламы");
+			disableAdsBtn.setVisibility(View.VISIBLE);
 		}
 	}
 

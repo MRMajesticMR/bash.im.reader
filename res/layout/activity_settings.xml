@@ -160,12 +160,13 @@
                 android:id="@+id/settings_txt_disable_ads"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Отключение рекламы"
+                android:text="Реклама отключена"
                 android:textColor="#000"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/settings_btn_disable_ads"
+                android:visibility="gone"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

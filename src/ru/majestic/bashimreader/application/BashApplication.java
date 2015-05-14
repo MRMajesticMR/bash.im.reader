@@ -1,5 +1,6 @@
 package ru.majestic.bashimreader.application;
 
+import ru.majestic.bashimreader.billing.GoogleBillingManager;
 import ru.majestic.bashimreader.utils.ApplicationUtils;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -31,6 +32,15 @@ public class BashApplication extends Application {
 			FlurryAgent.setVersionName("unknown");
 		
 		FlurryAgent.init(this, FLURRY_KEY);
+		
+		GoogleBillingManager.getInstance().init(this);
+	}
+	
+	@Override
+	public void onTerminate() {
+		super.onTerminate();
+		
+		GoogleBillingManager.getInstance().deinit();
 	}
 
 	

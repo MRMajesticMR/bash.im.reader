@@ -4,6 +4,7 @@ import com.flurry.android.FlurryAgent;
 
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.adapters.QuotesAdapter;
+import ru.majestic.bashimreader.billing.GoogleBillingManager;
 import ru.majestic.bashimreader.managers.QuotesManager;
 import ru.majestic.bashimreader.managers.listeners.CitationListener;
 import ru.majestic.bashimreader.menu.QuotesMenu;
@@ -56,9 +57,11 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
       quotesManager.setCitationListener(this);
       applicationSettings = new ApplicationSettings(this);
       initGUI(savedInstanceState);
-      showQuotes(savedInstanceState);
-      initAds();
+      showQuotes(savedInstanceState);      
       isNewList = false;
+      
+      if(!GoogleBillingManager.getInstance().isAdsDisabled())
+    	  initAds();
    }
    
 

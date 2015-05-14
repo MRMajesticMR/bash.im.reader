@@ -3,7 +3,10 @@ package ru.majestic.bashimreader.activities;
 import com.flurry.android.FlurryAgent;
 
 import ru.majestic.bashimreader.R;
+import ru.majestic.bashimreader.billing.GoogleBillingManager;
+import ru.majestic.bashimreader.dialogs.DisableAdsAlertDialog;
 import ru.majestic.bashimreader.dialogs.ExitApplicationAlertDialog;
+import ru.majestic.bashimreader.dialogs.listeners.DialogAnswerListener;
 import ru.majestic.bashimreader.flurry.utils.FlurryLogEventsDictionary;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
 import ru.majestic.bashimreader.utils.EndAnimationListener;
@@ -12,8 +15,11 @@ import ru.wapstart.plus1.sdk.Plus1BannerAsker;
 import ru.wapstart.plus1.sdk.Plus1BannerView;
 import ru.wapstart.plus1.sdk.Plus1Request;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,9 +28,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
-public class MainMenuActivity extends Activity implements OnClickListener {
+public class MainMenuActivity extends Activity implements OnClickListener, DialogAnswerListener {
 
+	private static final int DISABLE_ADS_ACTIVITY_REQUEST_CODE = 1001;
+	
 	private Button 		citationsBtn;
 	private Button 		comicsBtn;
 	private Button 		settingsBtn;
@@ -35,6 +44,8 @@ public class MainMenuActivity extends Activity implements OnClickListener {
 	private Button 		socialTwitterBtn;
 	private Button 		socialGoogleBtn;
 	private Button 		social4pdaBtn;
+	
+	private DisableAdsAlertDialog disableAdsAlertDialog;
 
 	private ApplicationSettings applicationSettings;
 	
@@ -45,7 +56,18 @@ public class MainMenuActivity extends Activity implements OnClickListener {
 
 	private EndAnimationListener fadeInAnimationListener = new EndAnimationListener() {
 		@Override
-		public void onAnimationEnd(Animation animation) {
+		public void onAnimationEnd(Animation animation) {			
+			if(GoogleBillingManager.getInstance().isReady()) {
+				if(!GoogleBillingManager.getInstance().isAdsDisabled()) {
+					initAds();
+					
+					if(!applicationSettings.isDisableAdsDialogShowed()) {
+						disableAdsAlertDialog.show();
+						applicationSettings.disableAdsDialogShowed();
+					}
+				}
+			}
+			
 			if (socialMenuView.getVisibility() == View.GONE) {
 				socialMenuView.setVisibility(View.VISIBLE);
 				socialMenuView.startAnimation(AnimationUtils.loadAnimation(MainMenuActivity.this, R.anim.social_menu_in));
@@ -59,14 +81,13 @@ public class MainMenuActivity extends Activity implements OnClickListener {
 		applicationSettings = new ApplicationSettings(this);
 		initGUI();
 		initDialogs();
-		startAnimation();
-		initAds();
+		startAnimation();				
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		initNightMode();
+		initNightMode();				
 	}
 
 	private final void initGUI() {
@@ -120,7 +141,8 @@ public class MainMenuActivity extends Activity implements OnClickListener {
 	}
 	
 	private void initDialogs() {
-		exitApplicationAlertDialog = new ExitApplicationAlertDialog(this);
+		exitApplicationAlertDialog 	= new ExitApplicationAlertDialog(this);
+		disableAdsAlertDialog		= new DisableAdsAlertDialog(this, this);
 	}
 
 	private final void startAnimation() {
@@ -206,5 +228,27 @@ public class MainMenuActivity extends Activity implements OnClickListener {
 			exit();
 		}
 		return true;
+	}
+
+	@Override
+	public void onDialogConfirmed() { 
+		try {
+			PendingIntent disableAdsPengingIntent = GoogleBillingManager.getInstance().getPendingIntentForDisableAds();
+			startIntentSenderForResult(disableAdsPengingIntent.getIntentSender(), DISABLE_ADS_ACTIVITY_REQUEST_CODE, new Intent(), 0, 0, 0);
+		} catch (SendIntentException e) {
+			Log.e("ADS_DISABLER", e.toString());
+		}
+	}
+
+	@Override
+	public void onDialogCanceled() {
+		//.		
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == DISABLE_ADS_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+			Toast.makeText(this, "^_^ Большое спасибо ^_^", Toast.LENGTH_SHORT).show();
+		}
 	}
 }

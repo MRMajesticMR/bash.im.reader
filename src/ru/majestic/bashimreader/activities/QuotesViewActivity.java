@@ -5,6 +5,7 @@ import com.flurry.android.FlurryAgent;
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.adapters.QuotesAdapter;
 import ru.majestic.bashimreader.billing.GoogleBillingManager;
+import ru.majestic.bashimreader.flurry.utils.FlurryLogEventsDictionary;
 import ru.majestic.bashimreader.managers.QuotesManager;
 import ru.majestic.bashimreader.managers.listeners.CitationListener;
 import ru.majestic.bashimreader.menu.QuotesMenu;
@@ -220,16 +221,23 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
    public void onClick(View v) {
       switch (v.getId()) {
       case R.id.quotes_view_btn_back:
+    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_BACK_BTN_PRESSED);
          exit();
          break;
+         
       case R.id.quotes_view_btn_reload:
+    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_RELOAD_BTN_PRESSED);
          quotesManager.loadCitations();
          reloadQuotesLyt.setVisibility(View.GONE);
          break;
+         
       case R.id.quotes_view_btn_menu:
+    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_VIEW_MENU_BTN_PRESSED);
          quotesMenu.toggleMenu();
          break;
+         
       case R.id.quotes_view_btn_refresh:
+    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_REFRESH_BTN_PRESSED);
          isNewList = true;
          quotesManager.setFromCache(false);
          quotesManager.clearList();
@@ -240,6 +248,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          break;
 
       case R.id.quotes_view_menu_btn_new_quotes:
+    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_NEW_QUOTE_BTN_PRESSED);
          isNewList = true;
          quotesListView.setVisibility(View.GONE);
          quotesManager.setFromCache(false);
@@ -249,7 +258,9 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          refreshListTitle();
          quotesMenu.toggleMenu();
          break;
+         
       case R.id.quotes_view_menu_btn_random_quotes:
+    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_RANDOM_BTN_PRESSED);
          isNewList = true;
          quotesListView.setVisibility(View.GONE);
          quotesManager.clearList();
@@ -258,7 +269,9 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          refreshListTitle();
          quotesMenu.toggleMenu();
          break;
+         
       case R.id.quotes_view_menu_btn_best_quotes:
+    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_BEST_BTN_PRESSED);
          isNewList = true;
          quotesListView.setVisibility(View.GONE);
          quotesManager.clearList();
@@ -267,7 +280,9 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          refreshListTitle();
          quotesMenu.toggleMenu();
          break;
+         
       case R.id.quotes_view_menu_btn_by_rating:
+    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_BY_RATING_BTN_PRESSED);
          isNewList = true;
          quotesListView.setVisibility(View.GONE);
          quotesManager.clearList();
@@ -276,7 +291,9 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          refreshListTitle();
          quotesMenu.toggleMenu();
          break;
+         
       case R.id.quotes_view_menu_btn_liked:
+    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_LIKED_BTN_PRESSED);
          isNewList = true;
          quotesListView.setVisibility(View.GONE);
          quotesManager.clearList();
@@ -287,6 +304,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          break;
 
       case R.id.quotes_view_menu_btn_abyss:
+    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_ABYSS_BTN_PRESSED);
          isNewList = true;
          quotesListView.setVisibility(View.GONE);
          quotesManager.clearList();
@@ -296,6 +314,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          quotesMenu.toggleMenu();
          break;
       case R.id.quotes_view_menu_btn_abyss_top:
+    	  FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_ABYSS_TOP_BTN_PRESSED);
          isNewList = true;
          quotesListView.setVisibility(View.GONE);
          quotesManager.clearList();
@@ -304,7 +323,9 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          refreshListTitle();
          quotesMenu.toggleMenu();
          break;
+         
       case R.id.quotes_view_menu_btn_abyss_best:
+    	  FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_ABYSS_BEST_BTN_PRESSED);
          isNewList = true;
          quotesListView.setVisibility(View.GONE);
          quotesManager.clearList();
@@ -315,6 +336,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          break;
 
       case R.id.quotes_view_quick_menu_btn_abyss_best:
+    	  FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_QM_ABYSS_BEST_BTN_PRESSED);
          isNewList = true;
          quotesListView.setVisibility(View.GONE);
          quotesManager.clearList();
@@ -322,7 +344,9 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          quotesManager.loadCitations();
          refreshListTitle();
          break;
+         
       case R.id.quotes_view_quick_menu_btn_new_quotes:
+    	  FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_QM_NEW_BTN_PRESSED);
          isNewList = true;
          quotesListView.setVisibility(View.GONE);
          quotesManager.setFromCache(false);
@@ -331,7 +355,9 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          quotesManager.loadCitations();
          refreshListTitle();
          break;
+         
       case R.id.quotes_view_quick_menu_btn_random_quotes:
+    	  FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_QM_RANDOM_BTN_PRESSED);
          isNewList = true;
          quotesListView.setVisibility(View.GONE);
          quotesManager.clearList();

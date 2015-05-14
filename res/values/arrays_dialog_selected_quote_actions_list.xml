@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="dialog_selected_quote_actions_list_array_honeycomd_and_higher">
+        <item>@string/dialog_selected_quote_actions_list_item_share</item>
+        <item>@string/dialog_selected_quote_actions_list_item_copy</item>
+    </string-array>
+    
+    <string-array name="dialog_selected_quote_actions_list_array_earler_honeycomd">
+        <item>@string/dialog_selected_quote_actions_list_item_share</item>
+    </string-array>
+
+</resources>

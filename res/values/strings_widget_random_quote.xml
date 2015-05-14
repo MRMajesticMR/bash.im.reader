@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_random_quote_txt_title">bash.im</string>
+    <string name="widget_random_quote_txt_sub_title">reader</string>
+    
+    <string name="widget_random_quote_txt_download_error">Не удалось загрузить цитату</string>
+    
+    <string name="widget_random_quote_btn_refresh">Повторить</string>
+</resources>

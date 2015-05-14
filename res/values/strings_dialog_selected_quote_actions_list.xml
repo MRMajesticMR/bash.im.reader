@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>    
+    
+    <string name="dialog_selected_quote_actions_list_title">Что будем делать с цитатой #</string>
+    <string name="dialog_selected_quote_actions_list_message_begin">Цитата #</string>
+    <string name="dialog_selected_quote_actions_list_message_end">скопирована</string>
+            
+    
+    <string name="dialog_selected_quote_actions_list_item_share">Поделиться</string>
+    <string name="dialog_selected_quote_actions_list_item_copy">Копировать</string>
+    
+</resources>

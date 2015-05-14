@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/comics_view_lyt_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#AAA" >
+
+            <RelativeLayout
+                android:id="@+id/comics_view_lyt_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <Button
+                    android:id="@+id/comics_view_btn_back"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="3dp"
+                    android:background="@drawable/back_btn_background"
+                    android:padding="5dp" />
+
+                <TextView
+                    android:id="@+id/comics_view_txt_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/comics_view_btn_back"
+                    android:text="Комиксы"
+                    android:textColor="#333"
+                    android:textSize="32sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/comics_view_lyt_download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/light_mode_download_view_background"
+                android:padding="5dp"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/comics_view_txt_download"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Загрузка..."
+                    android:textColor="#000"
+                    android:textSize="18sp" />
+
+                <ProgressBar
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:scrollbarStyle="insideInset" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <Gallery
+            android:id="@+id/comics_calendar_gallery"
+            android:layoutDirection="rtl"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp" />
+
+        <ImageView
+            android:id="@+id/comics_view_img_main_comics"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp" >
+        </ImageView>
+    </LinearLayout>
+
+</FrameLayout>

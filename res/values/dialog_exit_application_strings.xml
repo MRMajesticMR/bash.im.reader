@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="dialog_exit_application_title">Уже уходите?</string>
+    <string name="dialog_exit_application_message">Вы просто супер, и мы надеемся, что Вы еще вернетесь! Не хотите ли напоследок проголосовать за нашу программу? Тогда мы стали бы такиииими счастливыми!</string>
+    
+    <string name="dialog_exit_application_btn_ok">Ну лааадно</string>
+    <string name="dialog_exit_application_btn_later">В другой раз</string>
+    
+    <string name="dialog_exit_application_toast_thanks">^_^ Большое спасибо! ^_^</string>
+    <string name="dialog_exit_application_toast_where_is_market">А где маркет?! о_О</string>
+    
+</resources>

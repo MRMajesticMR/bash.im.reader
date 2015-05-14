@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/quotes_view_base_lyt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/quotes_view_lyt_top_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/quotes_view_btn_back"
+                        android:layout_width="46dp"
+                        android:layout_height="46dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="3dp"
+                        android:background="@drawable/back_btn_background"
+                        android:padding="5dp" />
+
+                    <TextView
+                        android:id="@+id/quotes_view_txt_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/quotes_view_btn_back"
+                        android:textColor="#333"
+                        android:textSize="32sp" />
+
+                    <Button
+                        android:id="@+id/quotes_view_btn_refresh"
+                        android:layout_width="46dp"
+                        android:layout_height="46dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="8dp"
+                        android:layout_toLeftOf="@+id/quotes_view_btn_menu"
+                        android:background="@drawable/refresh_btn_background"
+                        android:padding="5dp" />
+
+                    <Button
+                        android:id="@+id/quotes_view_btn_menu"
+                        android:layout_width="54dp"
+                        android:layout_height="54dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="8dp"
+                        android:background="@drawable/open_menu_btn_background"
+                        android:padding="5dp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/quote_view_download_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="5dp"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:id="@+id/quote_view_download_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Загрузка..."
+                        android:textColor="#000"
+                        android:textSize="18sp" />
+
+                    <ProgressBar
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:scrollbarStyle="insideInset" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/quotes_view_quick_menu_btn_abyss_best"
+                    style="@style/menu_sub_item"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Лучшее бездны"
+                    android:textSize="24sp" />
+
+                <Button
+                    android:id="@+id/quotes_view_quick_menu_btn_new_quotes"
+                    style="@style/menu_sub_item"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Новые"
+                    android:textSize="24sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:id="@+id/quotes_lyt_reload_quotes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="#FFF"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Не удалось загрузить цитаты."
+                    android:textColor="#333" />
+
+                <Button
+                    android:id="@+id/quotes_view_btn_reload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Еще разок!" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/quotes_view_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFF"
+                android:divider="#FFF"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/quotes_view_lyt_menu"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/quotes_view_menu_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" >
+
+                <Button
+                    android:id="@+id/quotes_view_menu_btn_close"
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/close_menu_btn_background"
+                    android:padding="5dp"
+                    android:paddingLeft="8dp" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/quotes_view_menu_section_title_quotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Цитаты"
+                android:textSize="28sp" />
+
+            <Button
+                android:id="@+id/quotes_view_menu_btn_new_quotes"
+                style="@style/menu_sub_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Новые" />
+
+            <Button
+                android:id="@+id/quotes_view_menu_btn_random_quotes"
+                style="@style/menu_sub_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Случайные" />
+
+            <Button
+                android:id="@+id/quotes_view_menu_btn_best_quotes"
+                style="@style/menu_sub_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Лучшие" />
+
+            <Button
+                android:id="@+id/quotes_view_menu_btn_by_rating"
+                style="@style/menu_sub_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="По рейтингу" />
+
+            <Button
+                android:id="@+id/quotes_view_menu_btn_liked"
+                style="@style/menu_sub_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Понравившиеся" />
+
+            <TextView
+                android:id="@+id/quotes_view_menu_section_title_abyss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="Бездна"
+                android:textColor="#000"
+                android:textSize="28sp" />
+
+            <Button
+                android:id="@+id/quotes_view_menu_btn_abyss"
+                style="@style/menu_sub_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Бездна" />
+
+            <Button
+                android:id="@+id/quotes_view_menu_btn_abyss_top"
+                style="@style/menu_sub_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Топ бездны" />
+
+            <Button
+                android:id="@+id/quotes_view_menu_btn_abyss_best"
+                style="@style/menu_sub_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Лучшее бездны" />
+        </LinearLayout>
+    </ScrollView>
+
+    <ru.wapstart.plus1.sdk.Plus1BannerView
+        android:id="@+id/quotes_view_menu_ad_view"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center" />
+
+</FrameLayout>

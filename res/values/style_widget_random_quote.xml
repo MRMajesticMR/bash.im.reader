@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Widget"></style>
+
+    <!-- Background -->
+    <style name="Widget.Background">
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="Widget.Background.Light">
+        <item name="android:background">@drawable/light_random_widget_background</item>
+    </style>
+
+    <!-- Title -->
+    <style name="Widget.Title">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="Widget.Title.Light">
+        <item name="android:textColor">#555</item>
+        <item name="android:background">#0000</item>
+    </style>
+
+    <!-- Subtitle -->
+    <style name="Widget.Subtitle">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Widget.Subtitle.Light">
+        <item name="android:textColor">#888</item>
+        <item name="android:background">#0000</item>
+    </style>
+
+    <!-- Quote -->
+    <style name="Widget.Quote">
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="Widget.Quote.Light">
+        <item name="android:textColor">#222</item>
+        <item name="android:background">@drawable/light_mode_quote_background</item>
+    </style>
+
+</resources>

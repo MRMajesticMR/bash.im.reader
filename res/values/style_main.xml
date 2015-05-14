@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="menu_sub_item">
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:gravity">left</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">#00F</item>
+    </style>
+
+    <style name="settings_section_title">
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:textSize">28sp</item>
+    </style>
+
+</resources>

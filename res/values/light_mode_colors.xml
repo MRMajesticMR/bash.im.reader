@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="light_mode_background">#FFF</color>        
+    <color name="light_mode_h1_background">#AAA</color>
+    <color name="light_mode_h2_background">#DDD</color>
+    <color name="light_mode_rating_btn_background">#F3F3F3</color>
+    <color name="light_mode_quotes_menu_background">#DDD</color>
+    
+    <color name="light_mode_text">#000</color>
+    <color name="light_mode_h1_text">#333</color>
+    <color name="light_mode_h2_text">#000</color>
+    <color name="light_mode_quote_date_text">#CCC</color>    
+    
+    
+</resources>

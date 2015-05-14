@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="night_mode_background">#000</color>
+    <color name="night_mode_h1_background">#444</color>
+    <color name="night_mode_h2_background">#222</color>
+    <color name="night_mode_rating_btn_background">#0C0C0C</color>
+    
+    <color name="night_mode_text">#AAA</color>
+	<color name="night_mode_h1_text">#CCC</color>
+    <color name="night_mode_h2_text">#FFF</color>
+    <color name="night_mode_quote_date_text">#333</color>
+    
+</resources>

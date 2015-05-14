@@ -1,0 +1,99 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_menu_lyt_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/logo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/main_menu_btn_citations"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/quotes_btn_background" />
+
+            <Button
+                android:id="@+id/main_menu_btn_comics"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/comics_btn_background" />
+
+            <Button
+                android:id="@+id/main_menu_btn_settings"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/settings_btn_background" />
+
+            <Button
+                android:id="@+id/main_menu_btn_exit"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/exit_btn_background" />
+        </LinearLayout>
+        
+        <ru.wapstart.plus1.sdk.Plus1BannerView
+			android:id="@+id/main_menu_ad_view"
+			android:layout_marginTop="10dp"
+			android:layout_width="320dp"
+			android:layout_height="50dp"
+			android:layout_gravity="bottom|center" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/main_menu_social_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:background="@drawable/light_mode_social_view_background"
+        android:padding="5dp"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/main_menu_btn_link_vk"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/vk_logo" />
+
+        <Button
+            android:id="@+id/main_menu_btn_link_twitter"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/twitter_logo" />
+
+        <Button
+            android:id="@+id/main_menu_btn_link_google"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/google_logo" />
+
+        <Button
+            android:id="@+id/main_menu_btn_link_4pda"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/pda_logo" />
+    </LinearLayout>
+
+</FrameLayout>

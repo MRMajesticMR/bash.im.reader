@@ -6,7 +6,6 @@ import ru.majestic.bashimreader.loaders.listeners.OnPageLoadListener;
 import ru.majestic.bashimreader.managers.QuotesManager;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
 import ru.majestic.bashimreader.utils.Voter;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.Html;
@@ -55,12 +54,12 @@ public class QuotesAdapter extends BaseAdapter implements OnPageLoadListener {
 
 		LinearLayout mainLyt 				= (LinearLayout) view.findViewById(R.id.quote_view_lyt_main);
 
-		TextView quoteTextTxt 				= (TextView) view.findViewById(R.id.quote_text);
-		TextView quoteIdTxt 				= (TextView) view.findViewById(R.id.quote_id);
-		TextView quoteDateTxt 				= (TextView) view.findViewById(R.id.quote_date);
-		TextView quoteRatingTxt 			= (TextView) view.findViewById(R.id.quote_rating);
-		final Button upQuoteRatingBtn 		= (Button) view.findViewById(R.id.quote_rating_btn_up);
-		final Button downQuoteRatingBtn 	= (Button) view.findViewById(R.id.quote_rating_btn_down);
+		TextView quoteTextTxt 				= (TextView) 	view.findViewById(R.id.quote_text);
+		TextView quoteIdTxt 				= (TextView) 	view.findViewById(R.id.quote_id);
+		TextView quoteDateTxt 				= (TextView) 	view.findViewById(R.id.quote_date);
+		TextView quoteRatingTxt 			= (TextView) 	view.findViewById(R.id.quote_rating);
+		final Button upQuoteRatingBtn 		= (Button) 		view.findViewById(R.id.quote_rating_btn_up);
+		final Button downQuoteRatingBtn 	= (Button) 		view.findViewById(R.id.quote_rating_btn_down);
 
 		quoteTextTxt.setText(Html.fromHtml(quotesManager.getQuotes().get(position).getContent()));
 		quoteIdTxt.setText("#" + quotesManager.getQuotes().get(position).getId());
@@ -77,8 +76,8 @@ public class QuotesAdapter extends BaseAdapter implements OnPageLoadListener {
 			quoteRatingTxt.setText("...");
 		else if (quotesManager.getQuotes().get(position).getRating() == -99997) {
 			quoteRatingTxt.setText("#" + (position + 1));
-			upQuoteRatingBtn.setVisibility(View.GONE);
-			downQuoteRatingBtn.setVisibility(View.GONE);
+			upQuoteRatingBtn.setVisibility(View.INVISIBLE);
+			downQuoteRatingBtn.setVisibility(View.INVISIBLE);
 			quoteIdTxt.setVisibility(View.INVISIBLE);
 		} else
 			quoteRatingTxt.setText(String.valueOf(quotesManager.getQuotes().get(position).getRating()));
@@ -87,8 +86,8 @@ public class QuotesAdapter extends BaseAdapter implements OnPageLoadListener {
 
 			@Override
 			public void onClick(View v) {
-				upQuoteRatingBtn.setVisibility(View.GONE);
-				downQuoteRatingBtn.setVisibility(View.GONE);
+				upQuoteRatingBtn.setVisibility(View.INVISIBLE);
+				downQuoteRatingBtn.setVisibility(View.INVISIBLE);
 				Voter.vote(context, QuotesAdapter.this, quotesManager.getQuotes().get(position).getId(), Voter.VOTE_RULEZ);
 				try {
 					QuotesAdapter.this.quotesManager.getQuotesDatebaseManager().saveLikedQuotes(quotesManager.getQuotes().get(position));
@@ -102,8 +101,8 @@ public class QuotesAdapter extends BaseAdapter implements OnPageLoadListener {
 
 			@Override
 			public void onClick(View v) {
-				upQuoteRatingBtn.setVisibility(View.GONE);
-				downQuoteRatingBtn.setVisibility(View.GONE);
+				upQuoteRatingBtn.setVisibility(View.INVISIBLE);
+				downQuoteRatingBtn.setVisibility(View.INVISIBLE);
 				Voter.vote(context, QuotesAdapter.this, quotesManager.getQuotes().get(position).getId(), Voter.VOTE_SUX);
 			}
 		});
@@ -135,28 +134,20 @@ public class QuotesAdapter extends BaseAdapter implements OnPageLoadListener {
 			quoteDateTxt.setTextColor(context.getResources().getColor(R.color.night_mode_quote_date_text));
 			quoteRatingTxt.setTextColor(context.getResources().getColor(R.color.night_mode_text));
 			quoteTextTxt.setTextColor(context.getResources().getColor(R.color.night_mode_text));
-			upQuoteRatingBtn.setTextColor(context.getResources().getColor(R.color.night_mode_text));
-			downQuoteRatingBtn.setTextColor(context.getResources().getColor(R.color.night_mode_text));
 
 			mainLyt.setBackgroundColor(context.getResources().getColor(R.color.night_mode_background));
 			quoteDateTxt.setBackgroundColor(context.getResources().getColor(R.color.night_mode_background));
 			quoteRatingTxt.setBackgroundColor(context.getResources().getColor(R.color.night_mode_background));
-			upQuoteRatingBtn.setBackgroundColor(context.getResources().getColor(R.color.night_mode_rating_btn_background));
-			downQuoteRatingBtn.setBackgroundColor(context.getResources().getColor(R.color.night_mode_rating_btn_background));
 
 			quoteTextTxt.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.night_mode_quote_background));
 		} else {
 			quoteDateTxt.setTextColor(context.getResources().getColor(R.color.light_mode_quote_date_text));
 			quoteRatingTxt.setTextColor(context.getResources().getColor(R.color.light_mode_text));
 			quoteTextTxt.setTextColor(context.getResources().getColor(R.color.light_mode_text));
-			upQuoteRatingBtn.setTextColor(context.getResources().getColor(R.color.light_mode_text));
-			downQuoteRatingBtn.setTextColor(context.getResources().getColor(R.color.light_mode_text));
 
 			mainLyt.setBackgroundColor(context.getResources().getColor(R.color.light_mode_background));
 			quoteDateTxt.setBackgroundColor(context.getResources().getColor(R.color.light_mode_background));
 			quoteRatingTxt.setBackgroundColor(context.getResources().getColor(R.color.light_mode_background));
-			upQuoteRatingBtn.setBackgroundColor(context.getResources().getColor(R.color.light_mode_rating_btn_background));
-			downQuoteRatingBtn.setBackgroundColor(context.getResources().getColor(R.color.light_mode_rating_btn_background));
 
 			quoteTextTxt.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.light_mode_quote_background));
 		}

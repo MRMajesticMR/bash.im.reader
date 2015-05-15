@@ -123,8 +123,6 @@ public class SingleQuoteActivity extends Activity implements OnPageLoadListener,
          mQuoteDateTxt.setTextColor(getResources().getColor(R.color.night_mode_quote_date_text));         
          mQuoteRatingTxt.setTextColor(getResources().getColor(R.color.night_mode_text));
          mQuoteTextTxt.setTextColor(getResources().getColor(R.color.night_mode_text));
-         mUpQuoteRating.setTextColor(getResources().getColor(R.color.night_mode_text));
-         mDownQuoteRating.setTextColor(getResources().getColor(R.color.night_mode_text));
                   
          mActivityRootLyt.setBackgroundColor(getResources().getColor(R.color.night_mode_background));
          mReloadQuoteLyt.setBackgroundColor(getResources().getColor(R.color.night_mode_background));
@@ -133,16 +131,12 @@ public class SingleQuoteActivity extends Activity implements OnPageLoadListener,
          mQuoteDateTxt.setBackgroundColor(getResources().getColor(R.color.night_mode_background));
          mQuoteRatingTxt.setBackgroundColor(getResources().getColor(R.color.night_mode_background));
          mQuoteTextTxt.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_background));
-         mUpQuoteRating.setBackgroundColor(getResources().getColor(R.color.night_mode_rating_btn_background));
-         mDownQuoteRating.setBackgroundColor(getResources().getColor(R.color.night_mode_rating_btn_background));
       } else {
          mActivityTitleTxt.setTextColor(getResources().getColor(R.color.light_mode_text));
          mDownloadQuoteTxt.setTextColor(getResources().getColor(R.color.light_mode_text));
          mQuoteDateTxt.setTextColor(getResources().getColor(R.color.light_mode_quote_date_text));
          mQuoteRatingTxt.setTextColor(getResources().getColor(R.color.light_mode_text));
          mQuoteTextTxt.setTextColor(getResources().getColor(R.color.light_mode_text));
-         mUpQuoteRating.setTextColor(getResources().getColor(R.color.light_mode_text));
-         mDownQuoteRating.setTextColor(getResources().getColor(R.color.light_mode_text));
          
          mActivityRootLyt.setBackgroundColor(getResources().getColor(R.color.light_mode_background));
          mReloadQuoteLyt.setBackgroundColor(getResources().getColor(R.color.light_mode_background));
@@ -151,8 +145,6 @@ public class SingleQuoteActivity extends Activity implements OnPageLoadListener,
          mQuoteDateTxt.setBackgroundColor(getResources().getColor(R.color.light_mode_background));
          mQuoteRatingTxt.setBackgroundColor(getResources().getColor(R.color.light_mode_background));
          mQuoteTextTxt.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_background));
-         mUpQuoteRating.setBackgroundColor(getResources().getColor(R.color.light_mode_rating_btn_background));
-         mDownQuoteRating.setBackgroundColor(getResources().getColor(R.color.light_mode_rating_btn_background));
       }
    }
    
@@ -239,8 +231,8 @@ public class SingleQuoteActivity extends Activity implements OnPageLoadListener,
    }
    
    private void voteQuote(String voteType) {
-      mUpQuoteRating.setVisibility(View.GONE);
-      mDownQuoteRating.setVisibility(View.GONE);
+      mUpQuoteRating.setVisibility(View.INVISIBLE);
+      mDownQuoteRating.setVisibility(View.INVISIBLE);
       Voter.vote(this, mVoteLoadListener, mQuote.getId(), voteType);
    }
 

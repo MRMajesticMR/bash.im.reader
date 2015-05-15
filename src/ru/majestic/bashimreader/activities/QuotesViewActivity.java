@@ -181,7 +181,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
    private void initAds() {
 	   bannerView = (Plus1BannerView) findViewById(R.id.quotes_view_menu_ad_view);	
 		
-	   bannerAsker = new Plus1BannerAsker(new Plus1Request().setApplicationId(12736), bannerView.enableAnimationFromBottom()).setCallbackUrl("wsp1bart://ru.majestic.bashimreader").setRefreshDelay(10);
+	   bannerAsker = new Plus1BannerAsker(new Plus1Request().setApplicationId(12736), bannerView.enableAnimationFromBottom().enableCloseButton()).setCallbackUrl("wsp1bart://ru.majestic.bashimreader").setRefreshDelay(10);
 	   bannerAsker.refreshBanner();
    }
    

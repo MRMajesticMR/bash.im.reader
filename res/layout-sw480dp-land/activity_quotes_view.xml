@@ -65,6 +65,12 @@
                         android:padding="5dp" />
                 </RelativeLayout>
 
+                <ru.wapstart.plus1.sdk.Plus1BannerView
+                    android:id="@+id/quotes_view_menu_ad_view"
+                    android:layout_width="320dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="right" />
+
                 <LinearLayout
                     android:id="@+id/quote_view_download_view"
                     android:layout_width="wrap_content"
@@ -268,12 +274,6 @@
                 android:layout_height="wrap_content"
                 android:text="Лучшее бездны" />
         </LinearLayout>
-    </ScrollView>
-
-    <ru.wapstart.plus1.sdk.Plus1BannerView
-        android:id="@+id/quotes_view_menu_ad_view"
-        android:layout_width="320dp"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom|right" />
+    </ScrollView>    
 
 </FrameLayout>

@@ -50,21 +50,16 @@ public class MainMenuActivity extends Activity implements OnClickListener, Dialo
 	private ApplicationSettings applicationSettings;
 	
 	private ExitApplicationAlertDialog exitApplicationAlertDialog;
-	
-	private Plus1BannerAsker 	bannerAsker;
-	private Plus1BannerView 	bannerView;
 
 	private EndAnimationListener fadeInAnimationListener = new EndAnimationListener() {
 		@Override
 		public void onAnimationEnd(Animation animation) {			
 			if(GoogleBillingManager.getInstance().isReady()) {
 				if(!GoogleBillingManager.getInstance().isAdsDisabled()) {
-					initAds();
-					
 					if(!applicationSettings.isDisableAdsDialogShowed()) {
 						disableAdsAlertDialog.show();
 						applicationSettings.disableAdsDialogShowed();
-					}
+					}										
 				}
 			}
 			
@@ -153,14 +148,7 @@ public class MainMenuActivity extends Activity implements OnClickListener, Dialo
 		comicsBtn.startAnimation(fadeInMenuAnimation);
 		settingsBtn.startAnimation(fadeInMenuAnimation);
 		exitBtn.startAnimation(fadeInMenuAnimation);
-	}
-	
-	private void initAds() {
-		bannerView = (Plus1BannerView) findViewById(R.id.main_menu_ad_view);	
-		
-		bannerAsker = new Plus1BannerAsker(new Plus1Request().setApplicationId(12736), bannerView).setCallbackUrl("wsp1bart://ru.majestic.bashimreader").setRefreshDelay(10);
-		bannerAsker.refreshBanner();
-	}
+	}		
 
 	@Override
 	public void onClick(View v) {

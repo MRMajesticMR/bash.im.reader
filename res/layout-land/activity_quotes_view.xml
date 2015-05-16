@@ -19,17 +19,17 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="50dp" >
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical" >
 
                     <Button
                         android:id="@+id/quotes_view_btn_back"
                         android:layout_width="46dp"
                         android:layout_height="46dp"
-                        android:layout_centerVertical="true"
                         android:layout_marginLeft="3dp"
                         android:background="@drawable/back_btn_background"
                         android:padding="5dp" />
@@ -48,7 +48,6 @@
                         android:id="@+id/quotes_view_btn_refresh"
                         android:layout_width="46dp"
                         android:layout_height="46dp"
-                        android:layout_centerVertical="true"
                         android:layout_marginRight="8dp"
                         android:layout_toLeftOf="@+id/quotes_view_btn_menu"
                         android:background="@drawable/refresh_btn_background"
@@ -56,14 +55,13 @@
 
                     <Button
                         android:id="@+id/quotes_view_btn_menu"
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
+                        android:layout_width="46dp"
+                        android:layout_height="46dp"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
                         android:layout_marginRight="8dp"
                         android:background="@drawable/open_menu_btn_background"
                         android:padding="5dp" />
-                </RelativeLayout>
+                </RelativeLayout>                                
 
                 <LinearLayout
                     android:id="@+id/quote_view_download_view"
@@ -89,11 +87,17 @@
                         android:layout_marginLeft="5dp"
                         android:scrollbarStyle="insideInset" />
                 </LinearLayout>
+                
+                <ru.wapstart.plus1.sdk.Plus1BannerView
+                    android:id="@+id/quotes_view_menu_ad_view"
+                    android:layout_width="320dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="right" />
             </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="46dp"
                 android:orientation="horizontal" >
 
                 <Button
@@ -180,13 +184,13 @@
             <RelativeLayout
                 android:id="@+id/quotes_view_menu_title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_marginBottom="10dp" >
 
                 <Button
                     android:id="@+id/quotes_view_menu_btn_close"
-                    android:layout_width="54dp"
-                    android:layout_height="54dp"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
                     android:layout_centerVertical="true"
                     android:background="@drawable/close_menu_btn_background"
                     android:padding="5dp"
@@ -269,11 +273,5 @@
                 android:text="Лучшее бездны" />
         </LinearLayout>
     </ScrollView>
-
-    <ru.wapstart.plus1.sdk.Plus1BannerView
-        android:id="@+id/quotes_view_menu_ad_view"
-        android:layout_width="320dp"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom|right" />
 
 </FrameLayout>

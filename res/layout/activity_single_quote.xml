@@ -123,7 +123,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dp"
-                    android:textColor="#00F" />
+                    android:textColor="#469bea" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

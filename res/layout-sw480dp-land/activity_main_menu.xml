@@ -49,6 +49,13 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/exit_btn_background" />
         </LinearLayout>
+        
+        <ru.wapstart.plus1.sdk.Plus1BannerView
+			android:id="@+id/main_menu_ad_view"
+			android:layout_marginTop="10dp"
+			android:layout_width="320dp"
+			android:layout_height="50dp"
+			android:layout_gravity="bottom|center" />
     </LinearLayout>    
     
     <LinearLayout

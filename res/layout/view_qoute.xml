@@ -28,7 +28,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:textColor="#469bea" />
+            android:textColor="#8C91FF" />
 
         <LinearLayout
             android:layout_width="wrap_content"

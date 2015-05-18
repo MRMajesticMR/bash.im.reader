@@ -7,7 +7,7 @@
         <item name="android:paddingTop">5dp</item>
         <item name="android:gravity">left</item>
         <item name="android:textSize">22sp</item>
-        <item name="android:textColor">#00F</item>
+        <item name="android:textColor">#469bea</item>
     </style>
 
     <style name="settings_section_title">

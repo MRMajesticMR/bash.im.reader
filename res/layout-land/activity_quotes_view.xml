@@ -87,12 +87,6 @@
                         android:layout_marginLeft="5dp"
                         android:scrollbarStyle="insideInset" />
                 </LinearLayout>
-                
-                <ru.wapstart.plus1.sdk.Plus1BannerView
-                    android:id="@+id/quotes_view_menu_ad_view"
-                    android:layout_width="320dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="right" />
             </FrameLayout>
 
             <LinearLayout

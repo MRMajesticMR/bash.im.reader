@@ -1,7 +1,5 @@
 package ru.majestic.bashimreader.activities;
 
-import com.flurry.android.FlurryAgent;
-
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.billing.GoogleBillingManager;
 import ru.majestic.bashimreader.dialogs.DisableAdsAlertDialog;
@@ -11,9 +9,6 @@ import ru.majestic.bashimreader.flurry.utils.FlurryLogEventsDictionary;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
 import ru.majestic.bashimreader.utils.EndAnimationListener;
 import ru.majestic.bashimreader.utils.SocialUtils;
-import ru.wapstart.plus1.sdk.Plus1BannerAsker;
-import ru.wapstart.plus1.sdk.Plus1BannerView;
-import ru.wapstart.plus1.sdk.Plus1Request;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -29,6 +24,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import com.flurry.android.FlurryAgent;
 
 public class MainMenuActivity extends Activity implements OnClickListener, DialogAnswerListener {
 
@@ -72,12 +69,12 @@ public class MainMenuActivity extends Activity implements OnClickListener, Dialo
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);			
 		applicationSettings = new ApplicationSettings(this);
 		initGUI();
 		initDialogs();
 		startAnimation();				
-	}
+	}	
 
 	@Override
 	public void onResume() {

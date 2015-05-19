@@ -1,6 +1,7 @@
 package ru.majestic.bashimreader.activities;
 
 import ru.majestic.bashimreader.R;
+import ru.majestic.bashimreader.ads.StartAppAdManager;
 import ru.majestic.bashimreader.billing.GoogleBillingManager;
 import ru.majestic.bashimreader.dialogs.DisableAdsAlertDialog;
 import ru.majestic.bashimreader.dialogs.ExitApplicationAlertDialog;
@@ -47,6 +48,8 @@ public class MainMenuActivity extends Activity implements OnClickListener, Dialo
 	private ApplicationSettings applicationSettings;
 	
 	private ExitApplicationAlertDialog exitApplicationAlertDialog;
+	
+	private StartAppAdManager startAppAdManager;
 
 	private EndAnimationListener fadeInAnimationListener = new EndAnimationListener() {
 		@Override
@@ -69,7 +72,7 @@ public class MainMenuActivity extends Activity implements OnClickListener, Dialo
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);			
+		super.onCreate(savedInstanceState);	
 		applicationSettings = new ApplicationSettings(this);
 		initGUI();
 		initDialogs();

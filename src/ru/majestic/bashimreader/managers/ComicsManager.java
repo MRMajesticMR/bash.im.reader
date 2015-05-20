@@ -14,7 +14,7 @@ import ru.majestic.bashimreader.data.Comics;
 import ru.majestic.bashimreader.datebase.QuotesDatebaseManager;
 import ru.majestic.bashimreader.file.ComicsFileManager;
 import ru.majestic.bashimreader.loaders.ComicsLoader;
-import ru.majestic.bashimreader.loaders.PageLoader;
+import ru.majestic.bashimreader.loaders.impl.PageLoader;
 import ru.majestic.bashimreader.loaders.listeners.OnComicsLoadListener;
 import ru.majestic.bashimreader.loaders.listeners.OnImageLoadListener;
 import ru.majestic.bashimreader.loaders.listeners.OnPageLoadListener;
@@ -47,7 +47,7 @@ public class ComicsManager implements OnPageLoadListener, OnImageLoadListener {
          mLoading = true;
          mPageLoader = new PageLoader();
          mPageLoader.setOnPageLoadListener(this);
-         mPageLoader.execute(ComicsDictionary.URL_ROOT_PAGE);
+         mPageLoader.load(ComicsDictionary.URL_ROOT_PAGE);
       }
    }
 
@@ -60,7 +60,7 @@ public class ComicsManager implements OnPageLoadListener, OnImageLoadListener {
          mLoading = true;
          mPageLoader = new PageLoader();
          mPageLoader.setOnPageLoadListener(this);
-         mPageLoader.execute(ComicsDictionary.URL_ROOT_PAGE + mLastComicsPageURL);
+         mPageLoader.load(ComicsDictionary.URL_ROOT_PAGE + mLastComicsPageURL);
       }
    }
 

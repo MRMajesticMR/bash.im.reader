@@ -16,7 +16,7 @@ import org.jsoup.select.Elements;
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.datebase.QuotesDatebaseManager;
-import ru.majestic.bashimreader.loaders.PageLoader;
+import ru.majestic.bashimreader.loaders.impl.PageLoader;
 import ru.majestic.bashimreader.loaders.listeners.OnPageLoadListener;
 import ru.majestic.bashimreader.managers.listeners.CitationListener;
 import ru.majestic.bashimreader.utils.EndAnimationListener;
@@ -158,23 +158,23 @@ public class QuotesManager implements OnPageLoadListener {
 		switch (state) {
 		case STATE_NEW_QUOTES:
 			if (currentPageCount == 0)
-				pageLoader.execute(QuotesDictionary.URL_QUOTES_NEW);
+				pageLoader.load(QuotesDictionary.URL_QUOTES_NEW);
 			else
-				pageLoader.execute(QuotesDictionary.URL_QUOTES_NEW + QuotesDictionary.PREFIX_NEW_QUOTES_PAGE + currentPageCount);
+				pageLoader.load(QuotesDictionary.URL_QUOTES_NEW + QuotesDictionary.PREFIX_NEW_QUOTES_PAGE + currentPageCount);
 			break;
 		case STATE_RANDOM_QUOTES:
-			pageLoader.execute(QuotesDictionary.URL_QUOTES_RANDOM);
+			pageLoader.load(QuotesDictionary.URL_QUOTES_RANDOM);
 			break;
 		case STATE_BEST_QUOTES:
 			if (quotes.size() == 0) {
-				pageLoader.execute(QuotesDictionary.URL_QUOTES_BEST);
+				pageLoader.load(QuotesDictionary.URL_QUOTES_BEST);
 			}
 			break;
 		case STATE_BY_RATING_QUOTES:
 			if (currentPageCount == 0)
-				pageLoader.execute(QuotesDictionary.URL_QUOTES_BY_RATING);
+				pageLoader.load(QuotesDictionary.URL_QUOTES_BY_RATING);
 			else
-				pageLoader.execute(QuotesDictionary.URL_QUOTES_BY_RATING + "/" + currentPageCount);
+				pageLoader.load(QuotesDictionary.URL_QUOTES_BY_RATING + "/" + currentPageCount);
 			break;
 		case STATE_LIKED_QUOTES:
 			loading = false;
@@ -187,14 +187,14 @@ public class QuotesManager implements OnPageLoadListener {
 			break;
 
 		case STATE_ABYSS:
-			pageLoader.execute(QuotesDictionary.URL_ABYSS);
+			pageLoader.load(QuotesDictionary.URL_ABYSS);
 			break;
 		case STATE_ABYSS_TOP:
 			if (quotes.size() == 0)
-				pageLoader.execute(QuotesDictionary.URL_ABYSS_TOP);
+				pageLoader.load(QuotesDictionary.URL_ABYSS_TOP);
 			break;
 		case STATE_ABYSS_BEST:
-			pageLoader.execute(QuotesDictionary.URL_ABYSS_BEST + new SimpleDateFormat("yyyyMMdd").format(abyssBestDate));
+			pageLoader.load(QuotesDictionary.URL_ABYSS_BEST + new SimpleDateFormat("yyyyMMdd").format(abyssBestDate));
 			break;
 		}
 	}

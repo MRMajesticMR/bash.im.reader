@@ -1,6 +1,6 @@
 package ru.majestic.bashimreader.utils;
 
-import ru.majestic.bashimreader.loaders.PageLoader;
+import ru.majestic.bashimreader.loaders.impl.PageLoader;
 import ru.majestic.bashimreader.loaders.listeners.OnPageLoadListener;
 import android.content.Context;
 
@@ -14,7 +14,7 @@ public class Voter {
    public static void vote(Context context, OnPageLoadListener listener, int quoteId, String type) {
       PageLoader pageLoader = new PageLoader();
       pageLoader.setOnPageLoadListener(listener);
-      pageLoader.execute(VOTE_BASE_URL + "/" + quoteId + "/" + type);      
+      pageLoader.load(VOTE_BASE_URL + "/" + quoteId + "/" + type);      
    }
 
 }

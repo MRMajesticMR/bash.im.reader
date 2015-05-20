@@ -2,7 +2,7 @@ package ru.majestic.bashimreader.activities;
 
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.data.Quote;
-import ru.majestic.bashimreader.loaders.PageLoader;
+import ru.majestic.bashimreader.loaders.impl.PageLoader;
 import ru.majestic.bashimreader.loaders.listeners.OnPageLoadListener;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
 import ru.majestic.bashimreader.utils.ServerAnswerParser;
@@ -76,7 +76,7 @@ public class SingleQuoteActivity extends Activity implements OnPageLoadListener,
       mReloadQuoteLyt.setVisibility(View.GONE);
       PageLoader pageLoader = new PageLoader();
       pageLoader.setOnPageLoadListener(this);
-      pageLoader.execute(pUrl);
+      pageLoader.load(pUrl);
    }
    
    private void initAnimation() {

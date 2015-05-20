@@ -1,16 +1,23 @@
 package ru.majestic.bashimreader.activities;
 
+import java.util.List;
+
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.adapters.QuotesAdapter;
 import ru.majestic.bashimreader.ads.IAdManager;
 import ru.majestic.bashimreader.ads.impl.AppodealAdManager;
+import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.flurry.utils.FlurryLogEventsDictionary;
 import ru.majestic.bashimreader.managers.QuotesManager;
 import ru.majestic.bashimreader.managers.listeners.CitationListener;
 import ru.majestic.bashimreader.menu.QuotesMenu;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
+import ru.majestic.bashimreader.quotes.sections.IQuotesSectionManager;
+import ru.majestic.bashimreader.quotes.sections.impl.NewQuotesSectionManager;
+import ru.majestic.bashimreader.quotes.sections.listeners.OnNewQuotesReadyListener;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,7 +31,10 @@ import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 
-public class QuotesViewActivity extends Activity implements OnClickListener, CitationListener, OnScrollListener {
+public class QuotesViewActivity extends Activity implements OnClickListener, 
+                                                            CitationListener, 
+                                                            OnScrollListener,
+                                                            OnNewQuotesReadyListener {
 
    private static final int ITEMS_COUNT_BEFORE_LOAD_NEW_PAGE = 10;
 
@@ -46,11 +56,22 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
 
    private boolean isNewList;
    
-   private IAdManager adManager;
+   private IAdManager               adManager;
+   private IQuotesSectionManager    quotesSectionManager;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);      
+      super.onCreate(savedInstanceState);
+      
+      adManager = new AppodealAdManager(this);
+      adManager.init();
+      adManager.showBanner();
+      
+      quotesSectionManager = new NewQuotesSectionManager();
+      quotesSectionManager.setOnNewQuotesReadyListener(this);
+      quotesSectionManager.restoreState(savedInstanceState);
+      
+      
       quotesManager = new QuotesManager(savedInstanceState, this);
       quotesManager.setCitationListener(this);
       
@@ -59,11 +80,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
       initGUI(savedInstanceState);
       showQuotes(savedInstanceState);
       
-      isNewList = false;
-      
-      adManager = new AppodealAdManager(this);
-      adManager.init();
-      adManager.showBanner();
+      isNewList = false;            
    }
    
 
@@ -250,7 +267,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          quotesManager.setState(QuotesManager.STATE_NEW_QUOTES);
          quotesManager.loadCitations();
          refreshListTitle();
-         quotesMenu.toggleMenu();
+         quotesMenu.toggleMenu();         
          break;
          
       case R.id.quotes_view_menu_btn_random_quotes:
@@ -392,11 +409,28 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
       if ((totalItemCount - visibleItemCount) <= (firstVisibleItem + ITEMS_COUNT_BEFORE_LOAD_NEW_PAGE)) {
          if (!quotesManager.isFromCache())
             quotesManager.loadCitations();
+         
+         quotesSectionManager.loadNextPage();
       }
    }
 
    @Override
    public void onScrollStateChanged(AbsListView view, int scrollState) {
+   }
+
+
+   @Override
+   public void onNewQuoteReady(List<Quote> quotes) {
+      Log.i("NEW_QUOTES_MANAGER", "Quotes ready");
+      for(Quote quote: quotes) {
+         Log.i("NEW_QUOTES_MANAGER", quote.toJSONString());
+      }
+   }
+
+
+   @Override
+   public void onLoadNewQuotesError() {
+      Log.i("NEW_QUOTES_MANAGER", "Quote load error");      
    }
 
 }

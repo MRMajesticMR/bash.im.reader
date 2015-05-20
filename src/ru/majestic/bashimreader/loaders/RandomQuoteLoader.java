@@ -1,6 +1,7 @@
 package ru.majestic.bashimreader.loaders;
 
 import ru.majestic.bashimreader.data.Quote;
+import ru.majestic.bashimreader.loaders.impl.PageLoader;
 import ru.majestic.bashimreader.loaders.listeners.OnPageLoadListener;
 import ru.majestic.bashimreader.utils.QuotesDictionary;
 import ru.majestic.bashimreader.utils.ServerAnswerParser;
@@ -14,7 +15,7 @@ public class RandomQuoteLoader implements OnPageLoadListener {
 
 		PageLoader pageLoader = new PageLoader();
 		pageLoader.setOnPageLoadListener(onRandomQuoteURLLoadListener);
-		pageLoader.execute(QuotesDictionary.URL_RANDOM_QUOTE_UTF_8);
+		pageLoader.load(QuotesDictionary.URL_RANDOM_QUOTE_UTF_8);
 	}	
 	
 	private OnPageLoadListener onRandomQuoteURLLoadListener = new OnPageLoadListener() {
@@ -28,7 +29,7 @@ public class RandomQuoteLoader implements OnPageLoadListener {
 		public void onPageLoad(String content) {
 			PageLoader pageLoader = new PageLoader();
 			pageLoader.setOnPageLoadListener(RandomQuoteLoader.this);
-			pageLoader.execute(ServerAnswerParser.getRandomQuoteURLFromServerAnswer(content));
+			pageLoader.load(ServerAnswerParser.getRandomQuoteURLFromServerAnswer(content));
 		}
 	};
 

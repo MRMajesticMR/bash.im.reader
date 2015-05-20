@@ -7,7 +7,6 @@ import com.startapp.android.publish.StartAppSDK;
 
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.adapters.QuotesAdapter;
-import ru.majestic.bashimreader.ads.StartAppAdManager;
 import ru.majestic.bashimreader.billing.GoogleBillingManager;
 import ru.majestic.bashimreader.flurry.utils.FlurryLogEventsDictionary;
 import ru.majestic.bashimreader.managers.QuotesManager;
@@ -49,14 +48,20 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
 
    private boolean isNewList;
    
-   private StartAppAdManager startAppAdManager;
+   private StartAppAd startAppAd;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-   
-      startAppAdManager = new StartAppAdManager(this, savedInstanceState);
-      startAppAdManager.showFullScreenAd();            
+      
+      if(!GoogleBillingManager.getInstance().isAdsDisabled()) {
+	      StartAppSDK.init(this, "104729922", "204649827", false);
+	      StartAppAd.showSplash(this, savedInstanceState);
+	      
+	      startAppAd = new StartAppAd(this);
+	      startAppAd.show();
+	      startAppAd.loadAd(AdMode.OFFERWALL);
+      }
       
       quotesManager = new QuotesManager(savedInstanceState, this);
       quotesManager.setCitationListener(this);
@@ -140,6 +145,12 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
       quickMenuNewQuotesBtn.setOnClickListener(this);
       if (quickMenuRandomQuotesBtn != null)
          quickMenuRandomQuotesBtn.setOnClickListener(this);
+   }
+   
+   @Override
+   protected void onRestoreInstanceState (Bundle savedInstanceState){
+      startAppAd.onRestoreInstanceState(savedInstanceState);
+      super.onRestoreInstanceState(savedInstanceState);
    }
 
    private final void refreshListTitle() {
@@ -378,7 +389,10 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          isNewList = false;
       }
       
-      startAppAdManager.showFullScreenAd();
+      if(!GoogleBillingManager.getInstance().isAdsDisabled()) {
+    	  startAppAd.showAd();
+    	  startAppAd.loadAd(AdMode.OFFERWALL);
+      }
    }
 
    @Override

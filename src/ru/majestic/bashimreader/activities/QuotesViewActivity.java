@@ -1,9 +1,6 @@
 package ru.majestic.bashimreader.activities;
 
 import com.flurry.android.FlurryAgent;
-import com.startapp.android.publish.StartAppAd;
-import com.startapp.android.publish.StartAppAd.AdMode;
-import com.startapp.android.publish.StartAppSDK;
 
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.adapters.QuotesAdapter;
@@ -13,6 +10,9 @@ import ru.majestic.bashimreader.managers.QuotesManager;
 import ru.majestic.bashimreader.managers.listeners.CitationListener;
 import ru.majestic.bashimreader.menu.QuotesMenu;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
+import ru.wapstart.plus1.sdk.Plus1BannerAsker;
+import ru.wapstart.plus1.sdk.Plus1BannerView;
+import ru.wapstart.plus1.sdk.Plus1Request;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -48,27 +48,21 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
 
    private boolean isNewList;
    
-   private StartAppAd startAppAd;
+   private Plus1BannerAsker 	bannerAsker;
+   private Plus1BannerView 		bannerView;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      
-      if(!GoogleBillingManager.getInstance().isAdsDisabled()) {
-	      StartAppSDK.init(this, "104729922", "204649827", false);
-	      StartAppAd.showSplash(this, savedInstanceState);
-	      
-	      startAppAd = new StartAppAd(this);
-	      startAppAd.show();
-	      startAppAd.loadAd(AdMode.OFFERWALL);
-      }
-      
       quotesManager = new QuotesManager(savedInstanceState, this);
       quotesManager.setCitationListener(this);
       applicationSettings = new ApplicationSettings(this);
       initGUI(savedInstanceState);
       showQuotes(savedInstanceState);      
-      isNewList = false;           
+      isNewList = false;
+      
+      if(!GoogleBillingManager.getInstance().isAdsDisabled())
+    	  initAds();
    }
    
 
@@ -146,12 +140,6 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
       if (quickMenuRandomQuotesBtn != null)
          quickMenuRandomQuotesBtn.setOnClickListener(this);
    }
-   
-   @Override
-   protected void onRestoreInstanceState (Bundle savedInstanceState){
-      startAppAd.onRestoreInstanceState(savedInstanceState);
-      super.onRestoreInstanceState(savedInstanceState);
-   }
 
    private final void refreshListTitle() {
       switch (quotesManager.getState()) {
@@ -188,7 +176,14 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
          quotesAdapter.notifyDataSetChanged();
          quotesListView.setVisibility(View.VISIBLE);
       }
-   }      
+   }
+   
+   private void initAds() {
+	   bannerView = (Plus1BannerView) findViewById(R.id.quotes_view_menu_ad_view);	
+		
+	   bannerAsker = new Plus1BannerAsker(new Plus1Request().setApplicationId(12736), bannerView.enableAnimationFromBottom().enableCloseButton()).setCallbackUrl("wsp1bart://ru.majestic.bashimreader").setRefreshDelay(10);
+	   bannerAsker.refreshBanner();
+   }
    
    @Override
 	public void onStart() {
@@ -387,11 +382,6 @@ public class QuotesViewActivity extends Activity implements OnClickListener, Cit
       if (isNewList) {
          quotesListView.setSelectionAfterHeaderView();
          isNewList = false;
-      }
-      
-      if(!GoogleBillingManager.getInstance().isAdsDisabled()) {
-    	  startAppAd.showAd();
-    	  startAppAd.loadAd(AdMode.OFFERWALL);
       }
    }
 

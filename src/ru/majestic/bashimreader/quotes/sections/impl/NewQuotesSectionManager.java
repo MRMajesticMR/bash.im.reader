@@ -1,5 +1,6 @@
 package ru.majestic.bashimreader.quotes.sections.impl;
 
+import android.util.Log;
 import ru.majestic.bashimreader.parsers.IQuotesPageParser;
 import ru.majestic.bashimreader.parsers.impl.NewQuotesPageParser;
 import ru.majestic.bashimreader.parsers.pagecont.IQuotesPageCountParser;
@@ -11,7 +12,10 @@ public class NewQuotesSectionManager extends IQuoteSectionManagerSkeleton {
    
    @Override
    protected String generateNextPageDownloadUrl() {      
-      return QuotesDictionary.URL_QUOTES_NEW + QuotesDictionary.PREFIX_NEW_QUOTES_PAGE + getNextPage();
+      String downloadURL = QuotesDictionary.URL_QUOTES_NEW + QuotesDictionary.PREFIX_NEW_QUOTES_PAGE + getNextPage();
+      Log.i("DOWNLOAD", downloadURL);
+      return downloadURL;
+//      return QuotesDictionary.URL_QUOTES_NEW + QuotesDictionary.PREFIX_NEW_QUOTES_PAGE + getNextPage();
    }
 
    @Override
@@ -21,7 +25,7 @@ public class NewQuotesSectionManager extends IQuoteSectionManagerSkeleton {
    
    @Override
    protected int changeNextPage(int currentPage) {
-      return currentPage--;
+      return --currentPage;
    }
    
    @Override

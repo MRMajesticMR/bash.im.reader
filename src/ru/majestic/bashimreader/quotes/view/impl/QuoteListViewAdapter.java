@@ -5,29 +5,39 @@ import java.util.List;
 
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.data.Quote;
-import ru.majestic.bashimreader.quotes.view.IQuoteListView;
+import ru.majestic.bashimreader.quotes.view.IQuoteListViewAdapter;
+import ru.majestic.bashimreader.quotes.view.listeners.OnNeedLoadMoreQuotesListener;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class QuoteListView extends BaseAdapter implements IQuoteListView {
+public class QuoteListViewAdapter extends BaseAdapter implements IQuoteListViewAdapter,  OnScrollListener {
 
-   private Context      context;
-   private List<Quote>  quotes;
+   private static final int ITEMS_COUNT_BEFORE_LOAD_NEW_PAGE = 10;
    
-   public QuoteListView(ListView listView, Context context) {
-      this.context   = context;
+   private OnNeedLoadMoreQuotesListener   onNeedLoadMoreQuotesListener;
+   private Context                        context;
+   private List<Quote>                    quotes;
+   private ListView                       listView;
+   
+   public QuoteListViewAdapter(Activity activity) {
+      this.context   = activity;
       this.quotes    = new LinkedList<Quote>();
+      this.listView  = (ListView) activity.findViewById(R.id.quotes_view_list_view);
       
       listView.setAdapter(this);
+      listView.setOnScrollListener(this);
    }
    
    @Override
@@ -50,8 +60,6 @@ public class QuoteListView extends BaseAdapter implements IQuoteListView {
       
       final LayoutInflater inflater    = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       final View view                  = inflater.inflate(R.layout.view_qoute, null);
-
-      LinearLayout mainLyt             = (LinearLayout) view.findViewById(R.id.quote_view_lyt_main);
 
       TextView quoteTextTxt            = (TextView)   view.findViewById(R.id.quote_text);
       TextView quoteIdTxt              = (TextView)   view.findViewById(R.id.quote_id);
@@ -85,17 +93,38 @@ public class QuoteListView extends BaseAdapter implements IQuoteListView {
      
       return view;
    }
+   
+   @Override
+   public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+      if ((totalItemCount - visibleItemCount) <= (firstVisibleItem + ITEMS_COUNT_BEFORE_LOAD_NEW_PAGE)) {
+         if(onNeedLoadMoreQuotesListener != null) {
+            onNeedLoadMoreQuotesListener.onNeedLoadMoreQuotes();
+         }
+      }
+   }
+   
+   @Override
+   public void onScrollStateChanged(AbsListView view, int scrollState) {
+      //.      
+   }
 
    @Override
    public void addQuotes(List<Quote> quotes) {
-      quotes.addAll(quotes);
+      this.quotes.addAll(quotes);
       notifyDataSetChanged();
+      listView.setVisibility(View.VISIBLE);
    }
 
    @Override
-   public void clear() {
-      quotes.clear();
+   public void clear() {      
+      this.quotes.clear();
       notifyDataSetChanged();
+      listView.setVisibility(View.GONE);
    }
+
+   @Override
+   public void setOnNeedLoadMoreQuotesListener(OnNeedLoadMoreQuotesListener onNeedLoadMoreQuotesListener) {
+      this.onNeedLoadMoreQuotesListener = onNeedLoadMoreQuotesListener;      
+   }   
 
 }

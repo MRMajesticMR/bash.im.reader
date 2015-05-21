@@ -35,12 +35,14 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
    protected IQuotesPageParser        quotesPageParser;
    protected IQuotesPageCountParser   quotePageCountParser;
    
+   private boolean                    newQuotesPrepearing;
 	private OnNewQuotesReadyListener   onNewQuotesReadyListener;
 	
 	public IQuoteSectionManagerSkeleton() {
-		quotes 			= new LinkedList<Quote>();
-		maxPageCount   = -1;
-		nextPage 	   = 0;
+		quotes 			       = new LinkedList<Quote>();
+		maxPageCount          = -1;
+		nextPage 	          = 0;
+		newQuotesPrepearing   = false;
 		
 		pageLoader		= new PageLoader();
 		pageLoader.setOnPageLoadListener(this);
@@ -54,7 +56,10 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 
 	@Override
 	public void loadNextPage() {
-		pageLoader.load(generateNextPageDownloadUrl());
+	   if(!newQuotesPrepearing) {
+	      newQuotesPrepearing = true;
+	      pageLoader.load(generateNextPageDownloadUrl());
+	   }
 	}
 
 	@Override
@@ -118,14 +123,16 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
    
    @Override
    public void onQuotesPageParsed(List<Quote> quotes) {
-      this.nextPage = changeNextPage(nextPage);
+      this.nextPage = changeNextPage(getNextPage());
       this.quotes.addAll(quotes);
       this.onNewQuotesReadyListener.onNewQuoteReady(quotes);
+      this.newQuotesPrepearing = false;
    }
 
    @Override
    public void onQuotePageParseError() {
       this.onNewQuotesReadyListener.onLoadNewQuotesError();
+      this.newQuotesPrepearing = false;
    }
    
    @Override

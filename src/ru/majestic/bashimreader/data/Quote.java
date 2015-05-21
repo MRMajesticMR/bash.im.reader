@@ -5,6 +5,9 @@ import org.json.JSONObject;
 
 public class Quote {   
    
+   public static final String QUOTE_RATING_NEW       = "???";
+   public static final String QUOTE_RATING_UNKNOWN   = "...";
+   
    public static final int QUOTE_RATING_NEW_VALUE             = -99999;
    public static final int QUOTE_RATING_UNKNOWN_VALUE         = -99998;
    

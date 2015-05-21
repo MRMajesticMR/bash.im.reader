@@ -10,10 +10,7 @@ import org.jsoup.select.Elements;
 import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.parsers.IQuotesPageParserSkeleton;
 
-public class NewQuotesPageParser extends IQuotesPageParserSkeleton {
-   
-   private static final String QUOTE_RATING_NEW       = "???";
-   private static final String QUOTE_RATING_UNKNOWN   = "...";
+public class NewQuotesPageParser extends IQuotesPageParserSkeleton {      
 
    @Override
    protected List<Quote> parsePageContent(String pageContent) throws IllegalArgumentException {
@@ -45,10 +42,10 @@ public class NewQuotesPageParser extends IQuotesPageParserSkeleton {
    }
    
    private int quoteRatingToInteger(String rating) {
-      if (rating.equals(QUOTE_RATING_NEW)) 
+      if (rating.equals(Quote.QUOTE_RATING_NEW)) 
          return Quote.QUOTE_RATING_NEW_VALUE;
       
-      if(rating.equals(QUOTE_RATING_UNKNOWN)) 
+      if(rating.equals(Quote.QUOTE_RATING_UNKNOWN)) 
          return Quote.QUOTE_RATING_UNKNOWN_VALUE;
       
 

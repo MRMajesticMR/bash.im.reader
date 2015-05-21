@@ -38,17 +38,17 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
    private static final int ITEMS_COUNT_BEFORE_LOAD_NEW_PAGE = 10;
 
-   private TextView downloadTxt;
-   private ViewGroup topMenuLyt, baseLyt;
+   private TextView        downloadTxt;
+   private ViewGroup       topMenuLyt, baseLyt;
    
-   private Button backBtn, reloadQuotesBtn, menuBtn, refreshBtn;
-   private Button quickMenuAbyssBestBtn, quickMenuNewQuotesBtn, quickMenuRandomQuotesBtn;
-   private ListView quotesListView;
-   private QuotesAdapter quotesAdapter;
-   private ViewGroup reloadQuotesLyt;
-   private QuotesMenu quotesMenu;
-   private TextView listTitle;
-   private ViewGroup downloadQuotesView;
+   private Button          backBtn, reloadQuotesBtn, menuBtn, refreshBtn;
+   private Button          quickMenuAbyssBestBtn, quickMenuNewQuotesBtn, quickMenuRandomQuotesBtn;
+   private ListView        quotesListView;
+   private QuotesAdapter   quotesAdapter;
+   private ViewGroup       reloadQuotesLyt;
+   private QuotesMenu      quotesMenu;
+   private TextView        listTitle;
+   private ViewGroup       downloadQuotesView;
     
    private QuotesManager quotesManager;   
 
@@ -70,8 +70,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       quotesSectionManager = new NewQuotesSectionManager();
       quotesSectionManager.setOnNewQuotesReadyListener(this);
       quotesSectionManager.restoreState(savedInstanceState);
-      
-      
+            
       quotesManager = new QuotesManager(savedInstanceState, this);
       quotesManager.setCitationListener(this);
       
@@ -87,20 +86,20 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    private final void initGUI(final Bundle savedInstanceState) {
       setContentView(R.layout.activity_quotes_view);
       
-      downloadTxt = (TextView) findViewById(R.id.quote_view_download_txt);
-      topMenuLyt = (ViewGroup) findViewById(R.id.quotes_view_lyt_top_menu);
-      baseLyt = (ViewGroup) findViewById(R.id.quotes_view_base_lyt);            
+      downloadTxt          = (TextView) findViewById(R.id.quote_view_download_txt);
+      topMenuLyt           = (ViewGroup) findViewById(R.id.quotes_view_lyt_top_menu);
+      baseLyt              = (ViewGroup) findViewById(R.id.quotes_view_base_lyt);            
 
-      listTitle = (TextView) findViewById(R.id.quotes_view_txt_title);
-      backBtn = (Button) findViewById(R.id.quotes_view_btn_back);
-      reloadQuotesBtn = (Button) findViewById(R.id.quotes_view_btn_reload);
-      menuBtn = (Button) findViewById(R.id.quotes_view_btn_menu);
-      refreshBtn = (Button) findViewById(R.id.quotes_view_btn_refresh);
-      quotesListView = (ListView) findViewById(R.id.quotes_view_list_view);
-      reloadQuotesLyt = (ViewGroup) findViewById(R.id.quotes_lyt_reload_quotes);
-      quotesAdapter = new QuotesAdapter(this, quotesManager);
-      quotesMenu = new QuotesMenu((ViewGroup) findViewById(R.id.quotes_view_lyt_menu), this, savedInstanceState);
-      downloadQuotesView = (ViewGroup) findViewById(R.id.quote_view_download_view);
+      listTitle            = (TextView) findViewById(R.id.quotes_view_txt_title);
+      backBtn              = (Button) findViewById(R.id.quotes_view_btn_back);
+      reloadQuotesBtn      = (Button) findViewById(R.id.quotes_view_btn_reload);
+      menuBtn              = (Button) findViewById(R.id.quotes_view_btn_menu);
+      refreshBtn           = (Button) findViewById(R.id.quotes_view_btn_refresh);
+      quotesListView       = (ListView) findViewById(R.id.quotes_view_list_view);
+      reloadQuotesLyt      = (ViewGroup) findViewById(R.id.quotes_lyt_reload_quotes);
+      quotesAdapter        = new QuotesAdapter(this, quotesManager);
+      quotesMenu           = new QuotesMenu((ViewGroup) findViewById(R.id.quotes_view_lyt_menu), this, savedInstanceState);
+      downloadQuotesView   = (ViewGroup) findViewById(R.id.quote_view_download_view);
 
       backBtn.setOnClickListener(this);
       reloadQuotesBtn.setOnClickListener(this);
@@ -384,6 +383,8 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       super.onSaveInstanceState(outState);
       quotesManager.saveState(outState);
       quotesMenu.saveState(outState);
+      
+      quotesSectionManager.saveState(outState);
    }
 
    @Override

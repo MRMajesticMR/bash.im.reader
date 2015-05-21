@@ -60,19 +60,20 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       
       applicationSettings = new ApplicationSettings(this);
       
-      initGUI(savedInstanceState);            
+      initGUI(savedInstanceState);                              
       
-      adManager = new AppodealAdManager(this);
-      adManager.init();
-      adManager.showBanner();
+      quoteListView = new QuoteListViewAdapter(this);       
+      quoteListView.setOnNeedLoadMoreQuotesListener(this);
+      
+//    adManager = new AppodealAdManager(this);
+//    adManager.init();
+//    adManager.showBanner();
       
       quotesSectionManager = new NewQuotesSectionManager();
       quotesSectionManager.setOnNewQuotesReadyListener(this);
       quotesSectionManager.restoreState(savedInstanceState);
-      quotesSectionManager.loadNextPage();
-      
-      quoteListView = new QuoteListViewAdapter(this);       
-      quoteListView.setOnNeedLoadMoreQuotesListener(this);            
+      if(quotesSectionManager.isNoQuotes())
+         quotesSectionManager.loadNextPage();
             
    }
    
@@ -416,7 +417,8 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
    @Override
    public void onNeedLoadMoreQuotes() {
-      quotesSectionManager.loadNextPage();
+      if(!quotesSectionManager.isNewQuotesPreparing())
+         quotesSectionManager.loadNextPage();
    }
 
 }

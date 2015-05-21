@@ -5,6 +5,8 @@ import ru.majestic.bashimreader.quotes.sections.listeners.OnNewQuotesReadyListen
 
 public interface IQuotesSectionManager {
 
+   public boolean isNoQuotes();
+   public boolean isNewQuotesPreparing();
 	public void loadNextPage();
 	public void setOnNewQuotesReadyListener(OnNewQuotesReadyListener onNewQuotesReadyListener);
 	

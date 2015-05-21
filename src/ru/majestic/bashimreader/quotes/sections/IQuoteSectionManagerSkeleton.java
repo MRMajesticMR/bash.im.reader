@@ -53,13 +53,19 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 		quotePageCountParser = getQuotesPageCountParser();
 		quotePageCountParser.setOnQuotesPageCountParsedListener(this);
 	}
+	
+	public boolean isNoQuotes() {
+	   return quotes.isEmpty();
+	}
+	
+	public boolean isNewQuotesPreparing() {
+	   return newQuotesPrepearing;
+	}
 
 	@Override
 	public void loadNextPage() {
-	   if(!newQuotesPrepearing) {
-	      newQuotesPrepearing = true;
-	      pageLoader.load(generateNextPageDownloadUrl());
-	   }
+	   newQuotesPrepearing = true;
+	   pageLoader.load(generateNextPageDownloadUrl());
 	}
 
 	@Override

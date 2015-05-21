@@ -20,10 +20,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!--  -->
 
-    <meta-data
-        android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version" />
-
     <application
         android:name="ru.majestic.bashimreader.application.BashApplication"
         android:allowBackup="true"
@@ -100,8 +96,6 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
         <!--  -->
-
-        <activity android:name="ru.wapstart.plus1.sdk.ApplicationBrowser" />
         <activity
             android:name=".activities.MainMenuActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
@@ -139,9 +133,6 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.google.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
         <!-- Widgets -->
 
@@ -155,16 +146,5 @@
                 android:resource="@xml/random_quote_widget_info" />
         </receiver>
     </application>
-
-    <intent-filter>
-        <data
-            android:host="ru.majestic.bashimreader"
-            android:scheme="wsp1bart://" />
-
-        <action android:name="android.intent.action.VIEW" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-    </intent-filter>
 
 </manifest>

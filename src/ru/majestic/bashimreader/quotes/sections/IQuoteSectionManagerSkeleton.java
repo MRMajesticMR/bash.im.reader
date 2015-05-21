@@ -11,24 +11,35 @@ import ru.majestic.bashimreader.loaders.IPageLoader;
 import ru.majestic.bashimreader.loaders.impl.PageLoader;
 import ru.majestic.bashimreader.loaders.listeners.OnPageLoadListener;
 import ru.majestic.bashimreader.parsers.IQuotesPageParser;
+import ru.majestic.bashimreader.parsers.listeners.OnQuotesPageCountParsedListener;
 import ru.majestic.bashimreader.parsers.listeners.OnQuotesPagesParsedListener;
+import ru.majestic.bashimreader.parsers.pagecont.IQuotesPageCountParser;
+import ru.majestic.bashimreader.parsers.pagecont.impl.EmptyQuotePageCountParser;
 import ru.majestic.bashimreader.quotes.sections.listeners.OnNewQuotesReadyListener;
 import android.os.Bundle;
 
-public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionManager, OnPageLoadListener, OnQuotesPagesParsedListener {
+public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionManager, 
+                                                               OnPageLoadListener, 
+                                                               OnQuotesPagesParsedListener,
+                                                               OnQuotesPageCountParsedListener {
 
    private static final String CITATION_CURRENT_PAGE_COUNT     = "CITATION_CURRENT_PAGE_COUNT";
    private static final String SAVED_QUOTES                    = "SAVED_QUOTES";
    
 	private List<Quote>                quotes;
 	
-	private int 			              nextPage;
-	private IPageLoader 	              pageLoader;
-	private IQuotesPageParser          quotesPageParser;
+	protected int                      nextPage;
+   protected String                   lastLoadPageContent;   
+   protected int                      maxPageCount;
+   protected IPageLoader 	           pageLoader;
+   protected IQuotesPageParser        quotesPageParser;
+   protected IQuotesPageCountParser   quotePageCountParser;
+   
 	private OnNewQuotesReadyListener   onNewQuotesReadyListener;
 	
 	public IQuoteSectionManagerSkeleton() {
 		quotes 			= new LinkedList<Quote>();
+		maxPageCount   = -1;
 		nextPage 	   = 0;
 		
 		pageLoader		= new PageLoader();
@@ -36,6 +47,9 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 		
 		quotesPageParser = getQuotesPageParser();
 		quotesPageParser.setOnQuotesPageParsedListener(this);
+		
+		quotePageCountParser = getQuotesPageCountParser();
+		quotePageCountParser.setOnQuotesPageCountParsedListener(this);
 	}
 
 	@Override
@@ -89,7 +103,12 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 	
 	@Override
    public void onPageLoad(String content) {
-      quotesPageParser.parsePage(content);
+	   if(maxPageCount == -1) {
+	      lastLoadPageContent = content;
+	      quotePageCountParser.parse(content);
+	   } else {
+	      quotesPageParser.parsePage(content);
+	   }      
    }
 
    @Override
@@ -99,7 +118,7 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
    
    @Override
    public void onQuotesPageParsed(List<Quote> quotes) {
-      this.nextPage++;
+      this.nextPage = changeNextPage(nextPage);
       this.quotes.addAll(quotes);
       this.onNewQuotesReadyListener.onNewQuoteReady(quotes);
    }
@@ -108,12 +127,26 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
    public void onQuotePageParseError() {
       this.onNewQuotesReadyListener.onLoadNewQuotesError();
    }
+   
+   @Override
+   public void onQuotesPageCountParsed(int pageCount) {
+      maxPageCount = pageCount;
+      quotesPageParser.parsePage(lastLoadPageContent);
+   }
 	
 	protected int getNextPage() {
 	   return nextPage;
 	}
 	
+	protected int changeNextPage(int currentPage) {
+	   return currentPage++;
+	}
+	
+	protected IQuotesPageCountParser getQuotesPageCountParser() {
+	   return new EmptyQuotePageCountParser();
+	}
+	
 	protected abstract String             generateNextPageDownloadUrl   ();
-	protected abstract IQuotesPageParser  getQuotesPageParser           ();     
+	protected abstract IQuotesPageParser  getQuotesPageParser           ();        
 	
 }

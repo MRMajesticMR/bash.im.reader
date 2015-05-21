@@ -3,8 +3,11 @@ package ru.majestic.bashimreader.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Quote {
-
+public class Quote {   
+   
+   public static final int QUOTE_RATING_NEW_VALUE             = -99999;
+   public static final int QUOTE_RATING_UNKNOWN_VALUE         = -99998;
+   
    private static final String JSON_FIELD_ID       = "id";
    private static final String JSON_FIELD_RATING   = "rating";
    private static final String JSON_FIELD_CONTENT  = "content";
@@ -15,11 +18,11 @@ public class Quote {
 	private final String      content;
 	private final String      dateString;
 
-	public Quote(final int id, final int rating, final String content, final String dateString) {
-		this.id = id;
-		this.rating = rating;
-		this.content = content;
-		this.dateString = dateString;
+	public Quote(int id, int rating, String content, String dateString) {
+		this.id            = id;
+		this.rating        = rating;
+		this.content       = content;
+		this.dateString    = dateString;
 	}
 	
 	public Quote(JSONObject savedQuote) throws JSONException {

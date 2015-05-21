@@ -40,9 +40,7 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 	
 	public IQuoteSectionManagerSkeleton() {
 		quotes 			       = new LinkedList<Quote>();
-		maxPageCount          = -1;
-		nextPage 	          = 0;
-		newQuotesPrepearing   = false;
+		reset();
 		
 		pageLoader		= new PageLoader();
 		pageLoader.setOnPageLoadListener(this);
@@ -60,6 +58,14 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 	
 	public boolean isNewQuotesPreparing() {
 	   return newQuotesPrepearing;
+	}
+	
+	public void reset() {
+	   quotes.clear();
+	   
+	   maxPageCount          = -1;
+      nextPage              = 0;
+      newQuotesPrepearing   = false;
 	}
 
 	@Override

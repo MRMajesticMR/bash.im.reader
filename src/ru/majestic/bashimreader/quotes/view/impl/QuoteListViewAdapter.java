@@ -115,7 +115,7 @@ public class QuoteListViewAdapter extends BaseAdapter implements IQuoteListViewA
    }
 
    @Override
-   public void clear() {      
+   public void clear() {            
       this.quotes.clear();
       notifyDataSetChanged();
       listView.setVisibility(View.GONE);

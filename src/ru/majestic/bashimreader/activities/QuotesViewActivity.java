@@ -3,13 +3,10 @@ package ru.majestic.bashimreader.activities;
 import java.util.List;
 
 import ru.majestic.bashimreader.R;
-import ru.majestic.bashimreader.adapters.QuotesAdapter;
 import ru.majestic.bashimreader.ads.IAdManager;
 import ru.majestic.bashimreader.ads.impl.AppodealAdManager;
 import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.flurry.utils.FlurryLogEventsDictionary;
-import ru.majestic.bashimreader.managers.QuotesManager;
-import ru.majestic.bashimreader.managers.listeners.CitationListener;
 import ru.majestic.bashimreader.menu.QuotesMenu;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
 import ru.majestic.bashimreader.quotes.sections.IQuotesSectionManager;
@@ -22,17 +19,12 @@ import ru.majestic.bashimreader.view.IDownloadStatusView;
 import ru.majestic.bashimreader.view.impl.TopSlideDownDownloadStatusView;
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 
@@ -70,9 +62,9 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       
       downloadStatusView = new TopSlideDownDownloadStatusView(this);
       
-//    adManager = new AppodealAdManager(this);
-//    adManager.init();
-//    adManager.showBanner();
+//      adManager = new AppodealAdManager(this);
+//      adManager.init();
+//      adManager.showBanner();
       
       quotesSectionManager = new NewQuotesSectionManager();
       quotesSectionManager.setOnNewQuotesReadyListener(this);
@@ -236,14 +228,12 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
          break;
          
       case R.id.quotes_view_btn_refresh:
-    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_REFRESH_BTN_PRESSED);
-//         isNewList = true;
-//         quotesManager.setFromCache(false);
-//         quotesManager.clearList();
-//         quotesManager.setState(quotesManager.getState());
-//         quotesManager.loadCitations();
-//         reloadQuotesLyt.setVisibility(View.GONE);
-//         quotesListView.setVisibility(View.GONE);
+         FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_REFRESH_BTN_PRESSED);
+
+         downloadStatusView.show();
+         quoteListView.clear();
+         quotesSectionManager.reset();
+         quotesSectionManager.loadNextPage();
          break;
 
       case R.id.quotes_view_menu_btn_new_quotes:

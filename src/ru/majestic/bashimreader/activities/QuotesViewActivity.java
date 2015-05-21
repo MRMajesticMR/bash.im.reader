@@ -18,6 +18,8 @@ import ru.majestic.bashimreader.quotes.sections.listeners.OnNewQuotesReadyListen
 import ru.majestic.bashimreader.quotes.view.IQuoteListViewAdapter;
 import ru.majestic.bashimreader.quotes.view.impl.QuoteListViewAdapter;
 import ru.majestic.bashimreader.quotes.view.listeners.OnNeedLoadMoreQuotesListener;
+import ru.majestic.bashimreader.view.IDownloadStatusView;
+import ru.majestic.bashimreader.view.impl.TopSlideDownDownloadStatusView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,13 +48,14 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    private ViewGroup       reloadQuotesLyt;
    private QuotesMenu      quotesMenu;
    private TextView        listTitle;
-   private ViewGroup       downloadQuotesView; 
+//   private ViewGroup       downloadQuotesView; 
 
    private ApplicationSettings applicationSettings;
    
    private IAdManager               adManager;
    private IQuotesSectionManager    quotesSectionManager;
    private IQuoteListViewAdapter    quoteListView;
+   private IDownloadStatusView      downloadStatusView;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -60,10 +63,12 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       
       applicationSettings = new ApplicationSettings(this);
       
-      initGUI(savedInstanceState);                              
+      initGUI(savedInstanceState);     
       
       quoteListView = new QuoteListViewAdapter(this);       
       quoteListView.setOnNeedLoadMoreQuotesListener(this);
+      
+      downloadStatusView = new TopSlideDownDownloadStatusView(this);
       
 //    adManager = new AppodealAdManager(this);
 //    adManager.init();
@@ -72,8 +77,11 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       quotesSectionManager = new NewQuotesSectionManager();
       quotesSectionManager.setOnNewQuotesReadyListener(this);
       quotesSectionManager.restoreState(savedInstanceState);
-      if(quotesSectionManager.isNoQuotes())
+      
+      if(quotesSectionManager.isNoQuotes()) {
+         downloadStatusView.show();
          quotesSectionManager.loadNextPage();
+      }
             
    }
    
@@ -91,8 +99,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       menuBtn              = (Button) findViewById(R.id.quotes_view_btn_menu);
       refreshBtn           = (Button) findViewById(R.id.quotes_view_btn_refresh);
       reloadQuotesLyt      = (ViewGroup) findViewById(R.id.quotes_lyt_reload_quotes);
-      quotesMenu           = new QuotesMenu((ViewGroup) findViewById(R.id.quotes_view_lyt_menu), this, savedInstanceState);
-      downloadQuotesView   = (ViewGroup) findViewById(R.id.quote_view_download_view);
+      quotesMenu           = new QuotesMenu((ViewGroup) findViewById(R.id.quotes_view_lyt_menu), this, savedInstanceState);      
 
       backBtn.setOnClickListener(this);
       reloadQuotesBtn.setOnClickListener(this);
@@ -114,7 +121,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
          baseLyt.setBackgroundColor(getResources().getColor(R.color.night_mode_background));
          reloadQuotesLyt.setBackgroundColor(getResources().getColor(R.color.night_mode_background));
          topMenuLyt.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quotes_title_background));
-         downloadQuotesView.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_download_view_background));
+//         downloadQuotesView.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_download_view_background));
          
          quickMenuAbyssBestBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
          quickMenuNewQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
@@ -127,7 +134,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
          baseLyt.setBackgroundColor(getResources().getColor(R.color.light_mode_background));
          reloadQuotesLyt.setBackgroundColor(getResources().getColor(R.color.light_mode_background));
          topMenuLyt.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quotes_title_background));
-         downloadQuotesView.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_download_view_background));  
+//         downloadQuotesView.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_download_view_background));  
          
          quickMenuAbyssBestBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
          quickMenuNewQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
@@ -379,46 +386,27 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 //      }
 //   }
 
-//   @Override
-//   public void onCitationPrepareError() {
-//      if (quotesManager.getState() == QuotesManager.STATE_LIKED_QUOTES) {
-//         Toast.makeText(this, "Да Вам вообще ничего не нравится! Что Вы тут ожидали увидеть?", Toast.LENGTH_SHORT).show();
-//      } else
-//         reloadQuotesLyt.setVisibility(View.VISIBLE);
-//   }
-
-//   @Override
-//   public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//      if ((totalItemCount - visibleItemCount) <= (firstVisibleItem + ITEMS_COUNT_BEFORE_LOAD_NEW_PAGE)) {
-////         if (!quotesManager.isFromCache())
-////            quotesManager.loadCitations();
-//         
-//         quotesSectionManager.loadNextPage();
-//      }
-//   }
-
 
    @Override
    public void onNewQuoteReady(List<Quote> quotes) {
-      Log.i("NEW_QUOTES_MANAGER", "Quotes ready");
-      for(Quote quote: quotes) {
-         Log.i("NEW_QUOTES_MANAGER", quote.toJSONString());
-      }
-      
+      downloadStatusView.hide();      
       quoteListView.addQuotes(quotes);
    }
 
 
    @Override
    public void onLoadNewQuotesError() {
-      Log.i("NEW_QUOTES_MANAGER", "Quote load error");      
+      downloadStatusView.hide();
+      reloadQuotesLyt.setVisibility(View.VISIBLE);      
    }
 
 
    @Override
    public void onNeedLoadMoreQuotes() {
-      if(!quotesSectionManager.isNewQuotesPreparing())
+      if(!quotesSectionManager.isNewQuotesPreparing()) {
+         downloadStatusView.show();
          quotesSectionManager.loadNextPage();
+      }
    }
 
 }

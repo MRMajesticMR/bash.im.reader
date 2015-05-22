@@ -12,7 +12,8 @@ public class ShareQuoteNeedListener implements OnClickListener {
    private Context   context;
    
    public ShareQuoteNeedListener(Context context, Quote quote) {
-      this.quote = quote;
+      this.context   = context;
+      this.quote     = quote;
    }
    
    @Override

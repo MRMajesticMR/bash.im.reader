@@ -1,16 +1,41 @@
 package ru.majestic.bashimreader.quotes.sections;
 
+import android.os.Bundle;
 import ru.majestic.bashimreader.quotes.sections.impl.NewQuotesSectionManager;
 
 public class QuoteSectionManagersFactory {
 
-   public enum SectionType {
-      NEW_QUOTES
+   public static final int SECTION_TYPE_NEW = 1;
+   
+   private static final String SAVED_SECTION_TYPE = "SAVED_SECTION_TYPE";
+   
+   private int currentSectionType;
+   
+   public QuoteSectionManagersFactory() {
+      currentSectionType = SECTION_TYPE_NEW;
    }
    
-   public static IQuotesSectionManager generateQuotesSectionManger(SectionType sectionType) {
-      switch(sectionType) {
-      case NEW_QUOTES :
+   public void saveState(Bundle savedInstanceState) {
+      savedInstanceState.putInt(SAVED_SECTION_TYPE, currentSectionType);
+   }
+   
+   public void restoreState(Bundle savedInstanceState) {
+      currentSectionType = savedInstanceState.getInt(SAVED_SECTION_TYPE);
+      if(currentSectionType == 0)
+         currentSectionType = SECTION_TYPE_NEW;
+   }
+   
+   public void setCurrentSectionType(int sectionType) {
+      this.currentSectionType = sectionType;
+   }
+   
+   public int getCurrentSectionType() {
+      return currentSectionType;
+   }
+   
+   public IQuotesSectionManager generateQuotesSectionManger() {      
+      switch(currentSectionType) {
+      case SECTION_TYPE_NEW :
          return new NewQuotesSectionManager();
          
       default:

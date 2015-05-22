@@ -4,14 +4,12 @@ import java.util.List;
 
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.ads.IAdManager;
-import ru.majestic.bashimreader.ads.impl.AppodealAdManager;
 import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.flurry.utils.FlurryLogEventsDictionary;
 import ru.majestic.bashimreader.menu.QuotesMenu;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
-import ru.majestic.bashimreader.quotes.sections.QuoteSectionManagersFactory;
 import ru.majestic.bashimreader.quotes.sections.IQuotesSectionManager;
-import ru.majestic.bashimreader.quotes.sections.QuoteSectionManagersFactory.SectionType;
+import ru.majestic.bashimreader.quotes.sections.QuoteSectionManagersFactory;
 import ru.majestic.bashimreader.quotes.sections.listeners.OnNewQuotesReadyListener;
 import ru.majestic.bashimreader.quotes.view.IQuoteListViewAdapter;
 import ru.majestic.bashimreader.quotes.view.impl.QuoteListViewAdapter;
@@ -50,6 +48,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    private ApplicationSettings applicationSettings;
 
    private IAdManager adManager;
+   private QuoteSectionManagersFactory quoteSectionManagersFactory;
    private IQuotesSectionManager quotesSectionManager;
    private IQuoteListViewAdapter quoteListView;
    private IDownloadStatusView downloadStatusView;
@@ -74,9 +73,12 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       // adManager = new AppodealAdManager(this);
       // adManager.init();
       // adManager.showBanner();
+      
+      quoteSectionManagersFactory = new QuoteSectionManagersFactory();
+      quoteSectionManagersFactory.restoreState(savedInstanceState);
 
-      topMenuView.refreshSectionTitle(SectionType.NEW_QUOTES);
-      quotesSectionManager = QuoteSectionManagersFactory.generateQuotesSectionManger(SectionType.NEW_QUOTES);
+      topMenuView.refreshSectionTitle(quoteSectionManagersFactory.getCurrentSectionType());
+      quotesSectionManager = quoteSectionManagersFactory.generateQuotesSectionManger();
       quotesSectionManager.setOnNewQuotesReadyListener(this);
       quotesSectionManager.restoreState(savedInstanceState);
 
@@ -236,8 +238,9 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
          
          downloadStatusView.show();
          quoteListView.clear();
-         topMenuView.refreshSectionTitle(SectionType.NEW_QUOTES);
-         quotesSectionManager = QuoteSectionManagersFactory.generateQuotesSectionManger(SectionType.NEW_QUOTES);
+         quoteSectionManagersFactory.setCurrentSectionType(QuoteSectionManagersFactory.SECTION_TYPE_NEW);
+         topMenuView.refreshSectionTitle(quoteSectionManagersFactory.getCurrentSectionType());         
+         quotesSectionManager = quoteSectionManagersFactory.generateQuotesSectionManger();
          quotesSectionManager.loadNextPage();                  
          break;
 
@@ -353,21 +356,11 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    @Override
    protected void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
-      // quotesManager.saveState(outState);
       quotesMenu.saveState(outState);
+      
 
       quotesSectionManager.saveState(outState);
    }
-
-   // @Override
-   // public void onCitationsReady() {
-   // quotesAdapter.notifyDataSetChanged();
-   // quotesListView.setVisibility(View.VISIBLE);
-   // if (isNewList) {
-   // quotesListView.setSelectionAfterHeaderView();
-   // isNewList = false;
-   // }
-   // }
 
    @Override
    public void onNewQuoteReady(List<Quote> quotes) {

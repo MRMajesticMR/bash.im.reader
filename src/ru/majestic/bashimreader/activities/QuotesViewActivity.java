@@ -11,9 +11,14 @@ import ru.majestic.bashimreader.preference.ApplicationSettings;
 import ru.majestic.bashimreader.quotes.sections.IQuotesSectionManager;
 import ru.majestic.bashimreader.quotes.sections.QuoteSectionManagersFactory;
 import ru.majestic.bashimreader.quotes.sections.listeners.OnNewQuotesReadyListener;
-import ru.majestic.bashimreader.quotes.view.IQuoteListViewAdapter;
+import ru.majestic.bashimreader.quotes.view.IQuoteListView;
 import ru.majestic.bashimreader.quotes.view.impl.QuoteListView;
 import ru.majestic.bashimreader.quotes.view.listeners.OnNeedLoadMoreQuotesListener;
+import ru.majestic.bashimreader.quotes.view.listeners.OnVoteQuoteButtonClicked;
+import ru.majestic.bashimreader.quotes.vote.IVoter;
+import ru.majestic.bashimreader.quotes.vote.IVoter.VoteStatus;
+import ru.majestic.bashimreader.quotes.vote.impl.QuotesVoter;
+import ru.majestic.bashimreader.quotes.vote.listener.VoteResultListener;
 import ru.majestic.bashimreader.view.IDownloadStatusView;
 import ru.majestic.bashimreader.view.ITopMenuView;
 import ru.majestic.bashimreader.view.handlers.IViewsConfigHandler;
@@ -29,13 +34,16 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 
 public class QuotesViewActivity extends Activity implements OnClickListener, 
                                                             OnNewQuotesReadyListener, 
                                                             OnNeedLoadMoreQuotesListener,
-                                                            TopMenuStateListener {
+                                                            TopMenuStateListener,
+                                                            OnVoteQuoteButtonClicked,
+                                                            VoteResultListener {
 
    private TextView downloadTxt; 
    private ViewGroup baseLyt;
@@ -49,11 +57,12 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    private IAdManager adManager;
    private QuoteSectionManagersFactory quoteSectionManagersFactory;
    private IQuotesSectionManager quotesSectionManager;
+   private IVoter voter;
    
    private IViewsConfigHandler viewConfigHandler;
-   private IQuoteListViewAdapter quoteListView;
+   private IQuoteListView quoteListView;
    private IDownloadStatusView downloadStatusView;
-   private ITopMenuView topMenuView;
+   private ITopMenuView topMenuView;   
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -63,8 +72,12 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
       initGUI(savedInstanceState);
 
+      voter = new QuotesVoter();
+      voter.setVoteResultListener(this);
+      
       quoteListView = new QuoteListView(this);
       quoteListView.setOnNeedLoadMoreQuotesListener(this);
+      quoteListView.setOnVoteQuoteButtonClicked(this);
 
       downloadStatusView = new TopSlideDownDownloadStatusView(this);
       
@@ -81,7 +94,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       topMenuView.refreshSectionTitle(quoteSectionManagersFactory.getCurrentSectionType());
       quotesSectionManager = quoteSectionManagersFactory.generateQuotesSectionManger();
       quotesSectionManager.setOnNewQuotesReadyListener(this);
-      quotesSectionManager.restoreState(savedInstanceState);
+      quotesSectionManager.restoreState(savedInstanceState);            
       
       viewConfigHandler = new ViewsConfigHandler();
       
@@ -391,6 +404,26 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       quoteListView.clear();
       quotesSectionManager.reset();
       quotesSectionManager.loadNextPage();      
+   }
+
+   @Override
+   public void onVoteUpButtonClicked(Quote quote) {
+      voter.vote(quote, VoteStatus.UP);
+   }
+
+   @Override
+   public void onVoteDownButtonClicked(Quote quote) {
+      voter.vote(quote, VoteStatus.DOWN);      
+   }
+
+   @Override
+   public void onVoteSuccess() {
+      Toast.makeText(this, "^_^ Спасибо за голос! ^_^", Toast.LENGTH_SHORT).show();      
+   }
+
+   @Override
+   public void onVoteFailed() {
+      Toast.makeText(this, "Опаньки! Почему-то голос не был отправлен...", Toast.LENGTH_SHORT).show();      
    }
 
 }

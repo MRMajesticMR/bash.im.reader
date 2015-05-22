@@ -6,7 +6,6 @@ import ru.majestic.bashimreader.loaders.impl.PageLoader;
 import ru.majestic.bashimreader.loaders.listeners.OnPageLoadListener;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
 import ru.majestic.bashimreader.utils.ServerAnswerParser;
-import ru.majestic.bashimreader.utils.Voter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -222,10 +221,10 @@ public class SingleQuoteActivity extends Activity implements OnPageLoadListener,
          loadPage(mUrl);
          break;
       case R.id.quote_btn_rating_up:
-         voteQuote(Voter.VOTE_RULEZ);
+//         voteQuote(Voter.VOTE_RULEZ);
          break;
       case R.id.quote_btn_rating_down:
-         voteQuote(Voter.VOTE_SUX);
+//         voteQuote(Voter.VOTE_SUX);
          break;
       }
    }
@@ -233,7 +232,7 @@ public class SingleQuoteActivity extends Activity implements OnPageLoadListener,
    private void voteQuote(String voteType) {
       mUpQuoteRating.setVisibility(View.INVISIBLE);
       mDownQuoteRating.setVisibility(View.INVISIBLE);
-      Voter.vote(this, mVoteLoadListener, mQuote.getId(), voteType);
+//      Voter.vote(this, mVoteLoadListener, mQuote.getId(), voteType);
    }
 
    @Override

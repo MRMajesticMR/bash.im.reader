@@ -10,6 +10,7 @@ public class Quote {
    
    public static final int QUOTE_RATING_NEW_VALUE             = -99999;
    public static final int QUOTE_RATING_UNKNOWN_VALUE         = -99998;
+   public static final int QUOTE_RATING_NO_VALUE              = -99997;
    
    private static final String JSON_FIELD_ID       = "id";
    private static final String JSON_FIELD_RATING   = "rating";

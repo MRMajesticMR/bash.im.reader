@@ -5,7 +5,6 @@ import ru.majestic.bashimreader.dialogs.SelectedQuoteActionsListDialog;
 import ru.majestic.bashimreader.loaders.listeners.OnPageLoadListener;
 import ru.majestic.bashimreader.managers.QuotesManager;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
-import ru.majestic.bashimreader.utils.Voter;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.Html;
@@ -88,7 +87,7 @@ public class QuotesAdapter extends BaseAdapter implements OnPageLoadListener {
 			public void onClick(View v) {
 				upQuoteRatingBtn.setVisibility(View.INVISIBLE);
 				downQuoteRatingBtn.setVisibility(View.INVISIBLE);
-				Voter.vote(context, QuotesAdapter.this, quotesManager.getQuotes().get(position).getId(), Voter.VOTE_RULEZ);
+//				Voter.vote(context, QuotesAdapter.this, quotesManager.getQuotes().get(position).getId(), Voter.VOTE_RULEZ);
 				try {
 					QuotesAdapter.this.quotesManager.getQuotesDatebaseManager().saveLikedQuotes(quotesManager.getQuotes().get(position));
 				} catch (Exception e) {
@@ -103,7 +102,7 @@ public class QuotesAdapter extends BaseAdapter implements OnPageLoadListener {
 			public void onClick(View v) {
 				upQuoteRatingBtn.setVisibility(View.INVISIBLE);
 				downQuoteRatingBtn.setVisibility(View.INVISIBLE);
-				Voter.vote(context, QuotesAdapter.this, quotesManager.getQuotes().get(position).getId(), Voter.VOTE_SUX);
+//				Voter.vote(context, QuotesAdapter.this, quotesManager.getQuotes().get(position).getId(), Voter.VOTE_SUX);
 			}
 		});
 

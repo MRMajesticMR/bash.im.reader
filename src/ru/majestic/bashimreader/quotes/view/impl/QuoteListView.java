@@ -5,8 +5,10 @@ import java.util.List;
 
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.data.Quote;
-import ru.majestic.bashimreader.quotes.view.IQuoteListViewAdapter;
+import ru.majestic.bashimreader.quotes.view.IQuoteListView;
 import ru.majestic.bashimreader.quotes.view.listeners.OnNeedLoadMoreQuotesListener;
+import ru.majestic.bashimreader.quotes.view.listeners.OnVoteQuoteButtonClicked;
+import ru.majestic.bashimreader.quotes.view.listeners.ShareQuoteNeedListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -22,11 +24,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class QuoteListView extends BaseAdapter implements IQuoteListViewAdapter,  OnScrollListener {
+public class QuoteListView extends BaseAdapter implements IQuoteListView,  OnScrollListener {
 
    private static final int ITEMS_COUNT_BEFORE_LOAD_NEW_PAGE = 10;
    
    private OnNeedLoadMoreQuotesListener   onNeedLoadMoreQuotesListener;
+   private OnVoteQuoteButtonClicked       onVoteQuoteButtonClicked;
+   
    private Context                        context;
    private List<Quote>                    quotes;
    private ListView                       listView;
@@ -58,7 +62,7 @@ public class QuoteListView extends BaseAdapter implements IQuoteListViewAdapter,
    }
 
    @Override
-   public View getView(int position, View convertView, ViewGroup parent) {
+   public View getView(final int position, View convertView, ViewGroup parent) {
       
       final LayoutInflater inflater    = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       final View view                  = inflater.inflate(R.layout.view_qoute, null);
@@ -114,7 +118,7 @@ public class QuoteListView extends BaseAdapter implements IQuoteListViewAdapter,
       else if (quotes.get(position).getRating() == Quote.QUOTE_RATING_UNKNOWN_VALUE)
          quoteRatingTxt.setText(Quote.QUOTE_RATING_UNKNOWN);
       
-      else if (quotes.get(position).getRating() == -99997) {
+      else if (quotes.get(position).getRating() == Quote.QUOTE_RATING_NO_VALUE) {
          quoteRatingTxt.setText("#" + (position + 1));
          upQuoteRatingBtn.setVisibility(View.INVISIBLE);
          downQuoteRatingBtn.setVisibility(View.INVISIBLE);
@@ -122,6 +126,31 @@ public class QuoteListView extends BaseAdapter implements IQuoteListViewAdapter,
       } else
          quoteRatingTxt.setText(String.valueOf(quotes.get(position).getRating()));
      
+      ShareQuoteNeedListener shareQuoteNeedListener = new ShareQuoteNeedListener(context, quotes.get(position));           
+      
+      quoteIdTxt.setOnClickListener(shareQuoteNeedListener);
+      quoteTextTxt.setOnClickListener(shareQuoteNeedListener);
+      
+      upQuoteRatingBtn.setOnClickListener(new View.OnClickListener() {
+
+         @Override
+         public void onClick(View v) {
+            upQuoteRatingBtn.setVisibility(View.INVISIBLE);
+            downQuoteRatingBtn.setVisibility(View.INVISIBLE);
+            onVoteQuoteButtonClicked.onVoteUpButtonClicked(quotes.get(position));
+         }
+      });
+
+      downQuoteRatingBtn.setOnClickListener(new View.OnClickListener() {
+
+         @Override
+         public void onClick(View v) {
+            upQuoteRatingBtn.setVisibility(View.INVISIBLE);
+            downQuoteRatingBtn.setVisibility(View.INVISIBLE);
+            onVoteQuoteButtonClicked.onVoteDownButtonClicked(quotes.get(position));
+         }
+      });
+      
       return view;
    }
    
@@ -166,6 +195,11 @@ public class QuoteListView extends BaseAdapter implements IQuoteListViewAdapter,
    @Override
    public void changeFontSize(int fontSize) {
       this.fontSize = fontSize;      
+   }
+
+   @Override
+   public void setOnVoteQuoteButtonClicked(OnVoteQuoteButtonClicked onVoteQuoteButtonClicked) {
+      this.onVoteQuoteButtonClicked = onVoteQuoteButtonClicked;
    }   
 
 }

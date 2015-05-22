@@ -223,11 +223,13 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       case R.id.quotes_view_menu_btn_new_quotes:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_NEW_QUOTE_BTN_PRESSED);
          
+         quotesMenu.toggleMenu();
          downloadStatusView.show();
          quoteListView.clear();
          quoteSectionManagersFactory.setCurrentSectionType(QuoteSectionManagersFactory.SECTION_TYPE_NEW);
          topMenuView.refreshSectionTitle(quoteSectionManagersFactory.getCurrentSectionType());         
          quotesSectionManager = quoteSectionManagersFactory.generateQuotesSectionManger();
+         quotesSectionManager.setOnNewQuotesReadyListener(this);
          quotesSectionManager.loadNextPage();                  
          break;
 

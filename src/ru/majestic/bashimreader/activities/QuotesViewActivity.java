@@ -12,10 +12,12 @@ import ru.majestic.bashimreader.quotes.sections.IQuotesSectionManager;
 import ru.majestic.bashimreader.quotes.sections.QuoteSectionManagersFactory;
 import ru.majestic.bashimreader.quotes.sections.listeners.OnNewQuotesReadyListener;
 import ru.majestic.bashimreader.quotes.view.IQuoteListViewAdapter;
-import ru.majestic.bashimreader.quotes.view.impl.QuoteListViewAdapter;
+import ru.majestic.bashimreader.quotes.view.impl.QuoteListView;
 import ru.majestic.bashimreader.quotes.view.listeners.OnNeedLoadMoreQuotesListener;
 import ru.majestic.bashimreader.view.IDownloadStatusView;
 import ru.majestic.bashimreader.view.ITopMenuView;
+import ru.majestic.bashimreader.view.handlers.IViewsConfigHandler;
+import ru.majestic.bashimreader.view.handlers.impl.ViewsConfigHandler;
 import ru.majestic.bashimreader.view.impl.QuotesTopMenuView;
 import ru.majestic.bashimreader.view.impl.TopSlideDownDownloadStatusView;
 import ru.majestic.bashimreader.view.listeners.TopMenuStateListener;
@@ -35,21 +37,20 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
                                                             OnNeedLoadMoreQuotesListener,
                                                             TopMenuStateListener {
 
-   private TextView downloadTxt;
-   private ViewGroup topMenuLyt, baseLyt;
+   private TextView downloadTxt; 
+   private ViewGroup baseLyt;
    private Button reloadQuotesBtn;
-//   private Button backBtn, reloadQuotesBtn, menuBtn, refreshBtn;
    private Button quickMenuAbyssBestBtn, quickMenuNewQuotesBtn, quickMenuRandomQuotesBtn;
    private ViewGroup reloadQuotesLyt;
    private QuotesMenu quotesMenu;
-//   private TextView listTitle;
-   // private ViewGroup downloadQuotesView;
 
    private ApplicationSettings applicationSettings;
 
    private IAdManager adManager;
    private QuoteSectionManagersFactory quoteSectionManagersFactory;
    private IQuotesSectionManager quotesSectionManager;
+   
+   private IViewsConfigHandler viewConfigHandler;
    private IQuoteListViewAdapter quoteListView;
    private IDownloadStatusView downloadStatusView;
    private ITopMenuView topMenuView;
@@ -62,7 +63,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
       initGUI(savedInstanceState);
 
-      quoteListView = new QuoteListViewAdapter(this);
+      quoteListView = new QuoteListView(this);
       quoteListView.setOnNeedLoadMoreQuotesListener(this);
 
       downloadStatusView = new TopSlideDownDownloadStatusView(this);
@@ -81,6 +82,15 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       quotesSectionManager = quoteSectionManagersFactory.generateQuotesSectionManger();
       quotesSectionManager.setOnNewQuotesReadyListener(this);
       quotesSectionManager.restoreState(savedInstanceState);
+      
+      viewConfigHandler = new ViewsConfigHandler();
+      
+      viewConfigHandler.addView(topMenuView);
+      viewConfigHandler.addView(downloadStatusView);
+      viewConfigHandler.addView(quoteListView);
+      
+      viewConfigHandler.enableNightMode(applicationSettings.isNightModeEnabled());
+      viewConfigHandler.onFontSizeChanged(applicationSettings.getQuotesTextSize());
 
       if (quotesSectionManager.isNoQuotes()) {
          downloadStatusView.show();
@@ -93,22 +103,13 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       setContentView(R.layout.activity_quotes_view);
 
       downloadTxt = (TextView) findViewById(R.id.quote_view_download_txt);
-      topMenuLyt = (ViewGroup) findViewById(R.id.quotes_view_lyt_top_menu);
       baseLyt = (ViewGroup) findViewById(R.id.quotes_view_base_lyt);
-
-//      listTitle = (TextView) findViewById(R.id.quotes_view_txt_title);
-//      backBtn = (Button) findViewById(R.id.quotes_view_btn_back);
       reloadQuotesBtn = (Button) findViewById(R.id.quotes_view_btn_reload);
-//      menuBtn = (Button) findViewById(R.id.quotes_view_btn_menu);
-//      refreshBtn = (Button) findViewById(R.id.quotes_view_btn_refresh);
       reloadQuotesLyt = (ViewGroup) findViewById(R.id.quotes_lyt_reload_quotes);
       quotesMenu = new QuotesMenu((ViewGroup) findViewById(R.id.quotes_view_lyt_menu), this, savedInstanceState);
 
-//      backBtn.setOnClickListener(this);
       reloadQuotesBtn.setOnClickListener(this);
-//      menuBtn.setOnClickListener(this);
       quotesMenu.setOnClickListener(this);
-//      refreshBtn.setOnClickListener(this);
 
       initQuickMenuGUI();
       initNightMode();
@@ -117,36 +118,22 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    private final void initNightMode() {
       if (applicationSettings.isNightModeEnabled()) {
          downloadTxt.setTextColor(getResources().getColor(R.color.night_mode_text));
-//         listTitle.setTextColor(getResources().getColor(R.color.night_mode_text));
 
          baseLyt.setBackgroundColor(getResources().getColor(R.color.night_mode_background));
          reloadQuotesLyt.setBackgroundColor(getResources().getColor(R.color.night_mode_background));
-         topMenuLyt.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quotes_title_background));
-         // downloadQuotesView.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_download_view_background));
 
-         quickMenuAbyssBestBtn
-               .setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
-         quickMenuNewQuotesBtn
-               .setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
+         quickMenuAbyssBestBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
+         quickMenuNewQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
          if (quickMenuRandomQuotesBtn != null)
-            quickMenuRandomQuotesBtn.setBackgroundDrawable(getResources().getDrawable(
-                  R.drawable.night_mode_quote_menu_sub_item_click_background));
+            quickMenuRandomQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
       } else {
          downloadTxt.setTextColor(getResources().getColor(R.color.light_mode_text));
-//         listTitle.setTextColor(getResources().getColor(R.color.light_mode_text));
-
          baseLyt.setBackgroundColor(getResources().getColor(R.color.light_mode_background));
          reloadQuotesLyt.setBackgroundColor(getResources().getColor(R.color.light_mode_background));
-         topMenuLyt.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quotes_title_background));
-         // downloadQuotesView.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_download_view_background));
-
-         quickMenuAbyssBestBtn
-               .setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
-         quickMenuNewQuotesBtn
-               .setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
+         quickMenuAbyssBestBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
+         quickMenuNewQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
          if (quickMenuRandomQuotesBtn != null)
-            quickMenuRandomQuotesBtn.setBackgroundDrawable(getResources().getDrawable(
-                  R.drawable.light_mode_quote_menu_sub_item_click_background));
+            quickMenuRandomQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
       }
    }
 

@@ -20,9 +20,8 @@ public class QuoteSectionManagersFactory {
    }
    
    public void restoreState(Bundle savedInstanceState) {
-      currentSectionType = savedInstanceState.getInt(SAVED_SECTION_TYPE);
-      if(currentSectionType == 0)
-         currentSectionType = SECTION_TYPE_NEW;
+      if(savedInstanceState != null)
+         currentSectionType = savedInstanceState.getInt(SAVED_SECTION_TYPE, 1);
    }
    
    public void setCurrentSectionType(int sectionType) {

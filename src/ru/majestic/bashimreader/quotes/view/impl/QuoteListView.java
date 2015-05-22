@@ -18,10 +18,11 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class QuoteListViewAdapter extends BaseAdapter implements IQuoteListViewAdapter,  OnScrollListener {
+public class QuoteListView extends BaseAdapter implements IQuoteListViewAdapter,  OnScrollListener {
 
    private static final int ITEMS_COUNT_BEFORE_LOAD_NEW_PAGE = 10;
    
@@ -29,8 +30,10 @@ public class QuoteListViewAdapter extends BaseAdapter implements IQuoteListViewA
    private Context                        context;
    private List<Quote>                    quotes;
    private ListView                       listView;
+   private int                            fontSize;
+   private boolean                        nightMode;
    
-   public QuoteListViewAdapter(Activity activity) {
+   public QuoteListView(Activity activity) {
       this.context   = activity;
       this.quotes    = new LinkedList<Quote>();
       this.listView  = (ListView) activity.findViewById(R.id.quotes_view_list_view);
@@ -60,13 +63,42 @@ public class QuoteListViewAdapter extends BaseAdapter implements IQuoteListViewA
       final LayoutInflater inflater    = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       final View view                  = inflater.inflate(R.layout.view_qoute, null);
 
-      TextView quoteTextTxt            = (TextView)   view.findViewById(R.id.quote_text);
-      TextView quoteIdTxt              = (TextView)   view.findViewById(R.id.quote_id);
-      TextView quoteDateTxt            = (TextView)   view.findViewById(R.id.quote_date);
-      TextView quoteRatingTxt          = (TextView)   view.findViewById(R.id.quote_rating);
-      final Button upQuoteRatingBtn    = (Button)     view.findViewById(R.id.quote_rating_btn_up);
-      final Button downQuoteRatingBtn  = (Button)     view.findViewById(R.id.quote_rating_btn_down);
+      
+      LinearLayout mainLyt             = (LinearLayout)  view.findViewById(R.id.quote_view_lyt_main);
+      TextView quoteTextTxt            = (TextView)      view.findViewById(R.id.quote_text);
+      TextView quoteIdTxt              = (TextView)      view.findViewById(R.id.quote_id);
+      TextView quoteDateTxt            = (TextView)      view.findViewById(R.id.quote_date);
+      TextView quoteRatingTxt          = (TextView)      view.findViewById(R.id.quote_rating);
+      final Button upQuoteRatingBtn    = (Button)        view.findViewById(R.id.quote_rating_btn_up);
+      final Button downQuoteRatingBtn  = (Button)        view.findViewById(R.id.quote_rating_btn_down);
 
+      
+      if (nightMode) {
+         quoteDateTxt.setTextColor(context.getResources().getColor(R.color.night_mode_quote_date_text));
+         quoteRatingTxt.setTextColor(context.getResources().getColor(R.color.night_mode_text));
+         quoteTextTxt.setTextColor(context.getResources().getColor(R.color.night_mode_text));
+         mainLyt.setBackgroundColor(context.getResources().getColor(R.color.night_mode_background));
+         quoteDateTxt.setBackgroundColor(context.getResources().getColor(R.color.night_mode_background));
+         quoteRatingTxt.setBackgroundColor(context.getResources().getColor(R.color.night_mode_background));
+         quoteTextTxt.setBackground(context.getResources().getDrawable(R.drawable.night_mode_quote_background));
+      } else {
+         quoteDateTxt.setTextColor(context.getResources().getColor(R.color.light_mode_quote_date_text));
+         quoteRatingTxt.setTextColor(context.getResources().getColor(R.color.light_mode_text));
+         quoteTextTxt.setTextColor(context.getResources().getColor(R.color.light_mode_text));
+         mainLyt.setBackgroundColor(context.getResources().getColor(R.color.light_mode_background));
+         quoteDateTxt.setBackgroundColor(context.getResources().getColor(R.color.light_mode_background));
+         quoteRatingTxt.setBackgroundColor(context.getResources().getColor(R.color.light_mode_background));
+         quoteTextTxt.setBackground(context.getResources().getDrawable(R.drawable.light_mode_quote_background));
+      }
+      
+      quoteTextTxt.setTextSize(fontSize);
+      quoteIdTxt.setTextSize(fontSize - 2);
+      quoteDateTxt.setTextSize(fontSize - 2);
+      quoteRatingTxt.setTextSize(fontSize - 2);
+      upQuoteRatingBtn.setTextSize(fontSize - 2);
+      downQuoteRatingBtn.setTextSize(fontSize - 2);
+      
+      
       quoteTextTxt.setText(Html.fromHtml(quotes.get(position).getContent()));
       quoteIdTxt.setText("#" + quotes.get(position).getId());
       
@@ -124,6 +156,16 @@ public class QuoteListViewAdapter extends BaseAdapter implements IQuoteListViewA
    @Override
    public void setOnNeedLoadMoreQuotesListener(OnNeedLoadMoreQuotesListener onNeedLoadMoreQuotesListener) {
       this.onNeedLoadMoreQuotesListener = onNeedLoadMoreQuotesListener;      
+   }
+
+   @Override
+   public void enableNightMode(boolean enable) {
+      this.nightMode = enable;      
+   }
+
+   @Override
+   public void changeFontSize(int fontSize) {
+      this.fontSize = fontSize;      
    }   
 
 }

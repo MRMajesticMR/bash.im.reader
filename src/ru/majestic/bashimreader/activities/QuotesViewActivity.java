@@ -9,14 +9,18 @@ import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.flurry.utils.FlurryLogEventsDictionary;
 import ru.majestic.bashimreader.menu.QuotesMenu;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
+import ru.majestic.bashimreader.quotes.sections.QuoteSectionManagersFactory;
 import ru.majestic.bashimreader.quotes.sections.IQuotesSectionManager;
-import ru.majestic.bashimreader.quotes.sections.impl.NewQuotesSectionManager;
+import ru.majestic.bashimreader.quotes.sections.QuoteSectionManagersFactory.SectionType;
 import ru.majestic.bashimreader.quotes.sections.listeners.OnNewQuotesReadyListener;
 import ru.majestic.bashimreader.quotes.view.IQuoteListViewAdapter;
 import ru.majestic.bashimreader.quotes.view.impl.QuoteListViewAdapter;
 import ru.majestic.bashimreader.quotes.view.listeners.OnNeedLoadMoreQuotesListener;
 import ru.majestic.bashimreader.view.IDownloadStatusView;
+import ru.majestic.bashimreader.view.ITopMenuView;
+import ru.majestic.bashimreader.view.impl.QuotesTopMenuView;
 import ru.majestic.bashimreader.view.impl.TopSlideDownDownloadStatusView;
+import ru.majestic.bashimreader.view.listeners.TopMenuStateListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -28,110 +32,119 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
-public class QuotesViewActivity extends Activity implements OnClickListener,
-                                                            OnNewQuotesReadyListener,
-                                                            OnNeedLoadMoreQuotesListener {   
+public class QuotesViewActivity extends Activity implements OnClickListener, 
+                                                            OnNewQuotesReadyListener, 
+                                                            OnNeedLoadMoreQuotesListener,
+                                                            TopMenuStateListener {
 
-   private TextView        downloadTxt;
-   private ViewGroup       topMenuLyt, baseLyt;
-   
-   private Button          backBtn, reloadQuotesBtn, menuBtn, refreshBtn;
-   private Button          quickMenuAbyssBestBtn, quickMenuNewQuotesBtn, quickMenuRandomQuotesBtn;
-   private ViewGroup       reloadQuotesLyt;
-   private QuotesMenu      quotesMenu;
-   private TextView        listTitle;
-//   private ViewGroup       downloadQuotesView; 
+   private TextView downloadTxt;
+   private ViewGroup topMenuLyt, baseLyt;
+   private Button reloadQuotesBtn;
+//   private Button backBtn, reloadQuotesBtn, menuBtn, refreshBtn;
+   private Button quickMenuAbyssBestBtn, quickMenuNewQuotesBtn, quickMenuRandomQuotesBtn;
+   private ViewGroup reloadQuotesLyt;
+   private QuotesMenu quotesMenu;
+//   private TextView listTitle;
+   // private ViewGroup downloadQuotesView;
 
    private ApplicationSettings applicationSettings;
-   
-   private IAdManager               adManager;
-   private IQuotesSectionManager    quotesSectionManager;
-   private IQuoteListViewAdapter    quoteListView;
-   private IDownloadStatusView      downloadStatusView;
+
+   private IAdManager adManager;
+   private IQuotesSectionManager quotesSectionManager;
+   private IQuoteListViewAdapter quoteListView;
+   private IDownloadStatusView downloadStatusView;
+   private ITopMenuView topMenuView;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      
+
       applicationSettings = new ApplicationSettings(this);
-      
-      initGUI(savedInstanceState);     
-      
-      quoteListView = new QuoteListViewAdapter(this);       
+
+      initGUI(savedInstanceState);
+
+      quoteListView = new QuoteListViewAdapter(this);
       quoteListView.setOnNeedLoadMoreQuotesListener(this);
-      
+
       downloadStatusView = new TopSlideDownDownloadStatusView(this);
       
-//      adManager = new AppodealAdManager(this);
-//      adManager.init();
-//      adManager.showBanner();
-      
-      quotesSectionManager = new NewQuotesSectionManager();
+      topMenuView = new QuotesTopMenuView(this);
+      topMenuView.setTopMenuStateListener(this);
+
+      // adManager = new AppodealAdManager(this);
+      // adManager.init();
+      // adManager.showBanner();
+
+      topMenuView.refreshSectionTitle(SectionType.NEW_QUOTES);
+      quotesSectionManager = QuoteSectionManagersFactory.generateQuotesSectionManger(SectionType.NEW_QUOTES);
       quotesSectionManager.setOnNewQuotesReadyListener(this);
       quotesSectionManager.restoreState(savedInstanceState);
-      
-      if(quotesSectionManager.isNoQuotes()) {
+
+      if (quotesSectionManager.isNoQuotes()) {
          downloadStatusView.show();
          quotesSectionManager.loadNextPage();
       }
-            
+
    }
-   
 
    private final void initGUI(final Bundle savedInstanceState) {
       setContentView(R.layout.activity_quotes_view);
-      
-      downloadTxt          = (TextView) findViewById(R.id.quote_view_download_txt);
-      topMenuLyt           = (ViewGroup) findViewById(R.id.quotes_view_lyt_top_menu);
-      baseLyt              = (ViewGroup) findViewById(R.id.quotes_view_base_lyt);            
 
-      listTitle            = (TextView) findViewById(R.id.quotes_view_txt_title);
-      backBtn              = (Button) findViewById(R.id.quotes_view_btn_back);
-      reloadQuotesBtn      = (Button) findViewById(R.id.quotes_view_btn_reload);
-      menuBtn              = (Button) findViewById(R.id.quotes_view_btn_menu);
-      refreshBtn           = (Button) findViewById(R.id.quotes_view_btn_refresh);
-      reloadQuotesLyt      = (ViewGroup) findViewById(R.id.quotes_lyt_reload_quotes);
-      quotesMenu           = new QuotesMenu((ViewGroup) findViewById(R.id.quotes_view_lyt_menu), this, savedInstanceState);      
+      downloadTxt = (TextView) findViewById(R.id.quote_view_download_txt);
+      topMenuLyt = (ViewGroup) findViewById(R.id.quotes_view_lyt_top_menu);
+      baseLyt = (ViewGroup) findViewById(R.id.quotes_view_base_lyt);
 
-      backBtn.setOnClickListener(this);
+//      listTitle = (TextView) findViewById(R.id.quotes_view_txt_title);
+//      backBtn = (Button) findViewById(R.id.quotes_view_btn_back);
+      reloadQuotesBtn = (Button) findViewById(R.id.quotes_view_btn_reload);
+//      menuBtn = (Button) findViewById(R.id.quotes_view_btn_menu);
+//      refreshBtn = (Button) findViewById(R.id.quotes_view_btn_refresh);
+      reloadQuotesLyt = (ViewGroup) findViewById(R.id.quotes_lyt_reload_quotes);
+      quotesMenu = new QuotesMenu((ViewGroup) findViewById(R.id.quotes_view_lyt_menu), this, savedInstanceState);
+
+//      backBtn.setOnClickListener(this);
       reloadQuotesBtn.setOnClickListener(this);
-      menuBtn.setOnClickListener(this);
+//      menuBtn.setOnClickListener(this);
       quotesMenu.setOnClickListener(this);
-      refreshBtn.setOnClickListener(this);
+//      refreshBtn.setOnClickListener(this);
 
       initQuickMenuGUI();
       initNightMode();
    }
-   
-   
 
    private final void initNightMode() {
       if (applicationSettings.isNightModeEnabled()) {
          downloadTxt.setTextColor(getResources().getColor(R.color.night_mode_text));
-         listTitle.setTextColor(getResources().getColor(R.color.night_mode_text));         
-         
+//         listTitle.setTextColor(getResources().getColor(R.color.night_mode_text));
+
          baseLyt.setBackgroundColor(getResources().getColor(R.color.night_mode_background));
          reloadQuotesLyt.setBackgroundColor(getResources().getColor(R.color.night_mode_background));
          topMenuLyt.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quotes_title_background));
-//         downloadQuotesView.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_download_view_background));
-         
-         quickMenuAbyssBestBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
-         quickMenuNewQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
-         if(quickMenuRandomQuotesBtn != null)
-            quickMenuRandomQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
+         // downloadQuotesView.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_download_view_background));
+
+         quickMenuAbyssBestBtn
+               .setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
+         quickMenuNewQuotesBtn
+               .setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
+         if (quickMenuRandomQuotesBtn != null)
+            quickMenuRandomQuotesBtn.setBackgroundDrawable(getResources().getDrawable(
+                  R.drawable.night_mode_quote_menu_sub_item_click_background));
       } else {
          downloadTxt.setTextColor(getResources().getColor(R.color.light_mode_text));
-         listTitle.setTextColor(getResources().getColor(R.color.light_mode_text));
-         
+//         listTitle.setTextColor(getResources().getColor(R.color.light_mode_text));
+
          baseLyt.setBackgroundColor(getResources().getColor(R.color.light_mode_background));
          reloadQuotesLyt.setBackgroundColor(getResources().getColor(R.color.light_mode_background));
          topMenuLyt.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quotes_title_background));
-//         downloadQuotesView.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_download_view_background));  
-         
-         quickMenuAbyssBestBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
-         quickMenuNewQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
-         if(quickMenuRandomQuotesBtn != null)
-            quickMenuRandomQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
+         // downloadQuotesView.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_download_view_background));
+
+         quickMenuAbyssBestBtn
+               .setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
+         quickMenuNewQuotesBtn
+               .setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
+         if (quickMenuRandomQuotesBtn != null)
+            quickMenuRandomQuotesBtn.setBackgroundDrawable(getResources().getDrawable(
+                  R.drawable.light_mode_quote_menu_sub_item_click_background));
       }
    }
 
@@ -146,49 +159,49 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
          quickMenuRandomQuotesBtn.setOnClickListener(this);
    }
 
-//   private final void refreshListTitle() {
-//      switch (quotesManager.getState()) {
-//      case QuotesManager.STATE_BEST_QUOTES:
-//         listTitle.setText("Лучшие");
-//         break;
-//      case QuotesManager.STATE_NEW_QUOTES:
-//         listTitle.setText("Новые");
-//         break;
-//      case QuotesManager.STATE_RANDOM_QUOTES:
-//         listTitle.setText("Случайные");
-//         break;
-//      case QuotesManager.STATE_BY_RATING_QUOTES:
-//         listTitle.setText("По рейтингу");
-//         break;
-//      case QuotesManager.STATE_LIKED_QUOTES:
-//         listTitle.setText("Понравившиеся");
-//         break;
-//
-//      case QuotesManager.STATE_ABYSS:
-//         listTitle.setText("Бездна");
-//         break;
-//      case QuotesManager.STATE_ABYSS_TOP:
-//         listTitle.setText("Топ бездны");
-//         break;
-//      case QuotesManager.STATE_ABYSS_BEST:
-//         listTitle.setText("Лучшее бездны");
-//         break;
-//      }
-//   }      
-   
+   // private final void refreshListTitle() {
+   // switch (quotesManager.getState()) {
+   // case QuotesManager.STATE_BEST_QUOTES:
+   // listTitle.setText("Лучшие");
+   // break;
+   // case QuotesManager.STATE_NEW_QUOTES:
+   // listTitle.setText("Новые");
+   // break;
+   // case QuotesManager.STATE_RANDOM_QUOTES:
+   // listTitle.setText("Случайные");
+   // break;
+   // case QuotesManager.STATE_BY_RATING_QUOTES:
+   // listTitle.setText("По рейтингу");
+   // break;
+   // case QuotesManager.STATE_LIKED_QUOTES:
+   // listTitle.setText("Понравившиеся");
+   // break;
+   //
+   // case QuotesManager.STATE_ABYSS:
+   // listTitle.setText("Бездна");
+   // break;
+   // case QuotesManager.STATE_ABYSS_TOP:
+   // listTitle.setText("Топ бездны");
+   // break;
+   // case QuotesManager.STATE_ABYSS_BEST:
+   // listTitle.setText("Лучшее бездны");
+   // break;
+   // }
+   // }
+
    @Override
-	public void onStart() {
-		super.onStart();
-		
-		FlurryAgent.onStartSession(this);
-	}
-	
-	@Override
-	public void onStop() {
-		super.onStop();
-		
-		FlurryAgent.onEndSession(this);
-	}
+   public void onStart() {
+      super.onStart();
+
+      FlurryAgent.onStartSession(this);
+   }
+
+   @Override
+   public void onStop() {
+      super.onStop();
+
+      FlurryAgent.onEndSession(this);
+   }
 
    @Override
    public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -211,148 +224,128 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    @Override
    public void onClick(View v) {
       switch (v.getId()) {
-      case R.id.quotes_view_btn_back:
-    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_BACK_BTN_PRESSED);
-         exit();
-         break;
-         
+
       case R.id.quotes_view_btn_reload:
-    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_RELOAD_BTN_PRESSED);
+         FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_RELOAD_BTN_PRESSED);
          quotesSectionManager.loadNextPage();
          reloadQuotesLyt.setVisibility(View.GONE);
          break;
-         
-      case R.id.quotes_view_btn_menu:
-    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_VIEW_MENU_BTN_PRESSED);
-         quotesMenu.toggleMenu();
-         break;
-         
-      case R.id.quotes_view_btn_refresh:
-         FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_REFRESH_BTN_PRESSED);
-
-         downloadStatusView.show();
-         quoteListView.clear();
-         quotesSectionManager.reset();
-         quotesSectionManager.loadNextPage();
-         break;
 
       case R.id.quotes_view_menu_btn_new_quotes:
-    	 FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_NEW_QUOTE_BTN_PRESSED);
-//         isNewList = true;
-//         quotesListView.setVisibility(View.GONE);
-//         quotesManager.setFromCache(false);
-//         quotesManager.clearList();
-//         quotesManager.setState(QuotesManager.STATE_NEW_QUOTES);
-//         quotesManager.loadCitations();
-//         refreshListTitle();
-//         quotesMenu.toggleMenu();         
-         break;
+         FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_NEW_QUOTE_BTN_PRESSED);
          
+         downloadStatusView.show();
+         quoteListView.clear();
+         topMenuView.refreshSectionTitle(SectionType.NEW_QUOTES);
+         quotesSectionManager = QuoteSectionManagersFactory.generateQuotesSectionManger(SectionType.NEW_QUOTES);
+         quotesSectionManager.loadNextPage();                  
+         break;
+
       case R.id.quotes_view_menu_btn_random_quotes:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_RANDOM_BTN_PRESSED);
-//         isNewList = true;
-//         quotesListView.setVisibility(View.GONE);
-//         quotesManager.clearList();
-//         quotesManager.setState(QuotesManager.STATE_RANDOM_QUOTES);
-//         quotesManager.loadCitations();
-//         refreshListTitle();
-//         quotesMenu.toggleMenu();
+         // isNewList = true;
+         // quotesListView.setVisibility(View.GONE);
+         // quotesManager.clearList();
+         // quotesManager.setState(QuotesManager.STATE_RANDOM_QUOTES);
+         // quotesManager.loadCitations();
+         // refreshListTitle();
+         // quotesMenu.toggleMenu();
          break;
-         
+
       case R.id.quotes_view_menu_btn_best_quotes:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_BEST_BTN_PRESSED);
-//         isNewList = true;
-//         quotesListView.setVisibility(View.GONE);
-//         quotesManager.clearList();
-//         quotesManager.setState(QuotesManager.STATE_BEST_QUOTES);
-//         quotesManager.loadCitations();
-//         refreshListTitle();
-//         quotesMenu.toggleMenu();
+         // isNewList = true;
+         // quotesListView.setVisibility(View.GONE);
+         // quotesManager.clearList();
+         // quotesManager.setState(QuotesManager.STATE_BEST_QUOTES);
+         // quotesManager.loadCitations();
+         // refreshListTitle();
+         // quotesMenu.toggleMenu();
          break;
-         
+
       case R.id.quotes_view_menu_btn_by_rating:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_BY_RATING_BTN_PRESSED);
-//         isNewList = true;
-//         quotesListView.setVisibility(View.GONE);
-//         quotesManager.clearList();
-//         quotesManager.setState(QuotesManager.STATE_BY_RATING_QUOTES);
-//         quotesManager.loadCitations();
-//         refreshListTitle();
-//         quotesMenu.toggleMenu();
+         // isNewList = true;
+         // quotesListView.setVisibility(View.GONE);
+         // quotesManager.clearList();
+         // quotesManager.setState(QuotesManager.STATE_BY_RATING_QUOTES);
+         // quotesManager.loadCitations();
+         // refreshListTitle();
+         // quotesMenu.toggleMenu();
          break;
-         
+
       case R.id.quotes_view_menu_btn_liked:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_LIKED_BTN_PRESSED);
-//         isNewList = true;
-//         quotesListView.setVisibility(View.GONE);
-//         quotesManager.clearList();
-//         quotesManager.setState(QuotesManager.STATE_LIKED_QUOTES);
-//         quotesManager.loadCitations();
-//         refreshListTitle();
-//         quotesMenu.toggleMenu();
+         // isNewList = true;
+         // quotesListView.setVisibility(View.GONE);
+         // quotesManager.clearList();
+         // quotesManager.setState(QuotesManager.STATE_LIKED_QUOTES);
+         // quotesManager.loadCitations();
+         // refreshListTitle();
+         // quotesMenu.toggleMenu();
          break;
 
       case R.id.quotes_view_menu_btn_abyss:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_ABYSS_BTN_PRESSED);
-//         isNewList = true;
-//         quotesListView.setVisibility(View.GONE);
-//         quotesManager.clearList();
-//         quotesManager.setState(QuotesManager.STATE_ABYSS);
-//         quotesManager.loadCitations();
-//         refreshListTitle();
-//         quotesMenu.toggleMenu();
+         // isNewList = true;
+         // quotesListView.setVisibility(View.GONE);
+         // quotesManager.clearList();
+         // quotesManager.setState(QuotesManager.STATE_ABYSS);
+         // quotesManager.loadCitations();
+         // refreshListTitle();
+         // quotesMenu.toggleMenu();
          break;
       case R.id.quotes_view_menu_btn_abyss_top:
-    	   FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_ABYSS_TOP_BTN_PRESSED);
-//         isNewList = true;
-//         quotesListView.setVisibility(View.GONE);
-//         quotesManager.clearList();
-//         quotesManager.setState(QuotesManager.STATE_ABYSS_TOP);
-//         quotesManager.loadCitations();
-//         refreshListTitle();
-//         quotesMenu.toggleMenu();
+         FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_ABYSS_TOP_BTN_PRESSED);
+         // isNewList = true;
+         // quotesListView.setVisibility(View.GONE);
+         // quotesManager.clearList();
+         // quotesManager.setState(QuotesManager.STATE_ABYSS_TOP);
+         // quotesManager.loadCitations();
+         // refreshListTitle();
+         // quotesMenu.toggleMenu();
          break;
-         
+
       case R.id.quotes_view_menu_btn_abyss_best:
-    	   FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_ABYSS_BEST_BTN_PRESSED);
-//         isNewList = true;
-//         quotesListView.setVisibility(View.GONE);
-//         quotesManager.clearList();
-//         quotesManager.setState(QuotesManager.STATE_ABYSS_BEST);
-//         quotesManager.loadCitations();
-//         refreshListTitle();
-//         quotesMenu.toggleMenu();
+         FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_ABYSS_BEST_BTN_PRESSED);
+         // isNewList = true;
+         // quotesListView.setVisibility(View.GONE);
+         // quotesManager.clearList();
+         // quotesManager.setState(QuotesManager.STATE_ABYSS_BEST);
+         // quotesManager.loadCitations();
+         // refreshListTitle();
+         // quotesMenu.toggleMenu();
          break;
 
       case R.id.quotes_view_quick_menu_btn_abyss_best:
-    	   FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_QM_ABYSS_BEST_BTN_PRESSED);
-//         isNewList = true;
-//         quotesListView.setVisibility(View.GONE);
-//         quotesManager.clearList();
-//         quotesManager.setState(QuotesManager.STATE_ABYSS_BEST);
-//         quotesManager.loadCitations();
-//         refreshListTitle();
+         FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_QM_ABYSS_BEST_BTN_PRESSED);
+         // isNewList = true;
+         // quotesListView.setVisibility(View.GONE);
+         // quotesManager.clearList();
+         // quotesManager.setState(QuotesManager.STATE_ABYSS_BEST);
+         // quotesManager.loadCitations();
+         // refreshListTitle();
          break;
-         
+
       case R.id.quotes_view_quick_menu_btn_new_quotes:
-    	   FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_QM_NEW_BTN_PRESSED);
-//         isNewList = true;
-//         quotesListView.setVisibility(View.GONE);
-//         quotesManager.setFromCache(false);
-//         quotesManager.clearList();
-//         quotesManager.setState(QuotesManager.STATE_NEW_QUOTES);
-//         quotesManager.loadCitations();
-//         refreshListTitle();
+         FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_QM_NEW_BTN_PRESSED);
+         // isNewList = true;
+         // quotesListView.setVisibility(View.GONE);
+         // quotesManager.setFromCache(false);
+         // quotesManager.clearList();
+         // quotesManager.setState(QuotesManager.STATE_NEW_QUOTES);
+         // quotesManager.loadCitations();
+         // refreshListTitle();
          break;
-         
+
       case R.id.quotes_view_quick_menu_btn_random_quotes:
-    	   FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_QM_RANDOM_BTN_PRESSED);
-//         isNewList = true;
-//         quotesListView.setVisibility(View.GONE);
-//         quotesManager.clearList();
-//         quotesManager.setState(QuotesManager.STATE_RANDOM_QUOTES);
-//         quotesManager.loadCitations();
-//         refreshListTitle();
+         FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_QM_RANDOM_BTN_PRESSED);
+         // isNewList = true;
+         // quotesListView.setVisibility(View.GONE);
+         // quotesManager.clearList();
+         // quotesManager.setState(QuotesManager.STATE_RANDOM_QUOTES);
+         // quotesManager.loadCitations();
+         // refreshListTitle();
          break;
       }
    }
@@ -360,43 +353,62 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    @Override
    protected void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
-//      quotesManager.saveState(outState);
+      // quotesManager.saveState(outState);
       quotesMenu.saveState(outState);
-      
+
       quotesSectionManager.saveState(outState);
    }
 
-//   @Override
-//   public void onCitationsReady() {
-//      quotesAdapter.notifyDataSetChanged();
-//      quotesListView.setVisibility(View.VISIBLE);
-//      if (isNewList) {
-//         quotesListView.setSelectionAfterHeaderView();
-//         isNewList = false;
-//      }
-//   }
-
+   // @Override
+   // public void onCitationsReady() {
+   // quotesAdapter.notifyDataSetChanged();
+   // quotesListView.setVisibility(View.VISIBLE);
+   // if (isNewList) {
+   // quotesListView.setSelectionAfterHeaderView();
+   // isNewList = false;
+   // }
+   // }
 
    @Override
    public void onNewQuoteReady(List<Quote> quotes) {
-      downloadStatusView.hide();      
+      downloadStatusView.hide();
       quoteListView.addQuotes(quotes);
    }
-
 
    @Override
    public void onLoadNewQuotesError() {
       downloadStatusView.hide();
-      reloadQuotesLyt.setVisibility(View.VISIBLE);      
+      reloadQuotesLyt.setVisibility(View.VISIBLE);
    }
-
 
    @Override
    public void onNeedLoadMoreQuotes() {
-      if(!quotesSectionManager.isNewQuotesPreparing()) {
+      if (!quotesSectionManager.isNewQuotesPreparing()) {
          downloadStatusView.show();
          quotesSectionManager.loadNextPage();
       }
+   }
+
+   @Override
+   public void onBackButtonClicked() {
+      FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_BACK_BTN_PRESSED);
+      exit();
+   }
+
+   @Override
+   public void onMenuButtonClicked() {
+      FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_VIEW_MENU_BTN_PRESSED);
+      quotesMenu.toggleMenu();      
+   }
+
+   @Override
+   public void onRefreshButtonClicked() {
+      FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_REFRESH_BTN_PRESSED);
+
+      downloadStatusView.show();
+      quoteListView.clear();
+      quotesSectionManager.reset();
+      quotesSectionManager.loadNextPage();      
    }
 
 }

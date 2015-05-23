@@ -2,10 +2,12 @@ package ru.majestic.bashimreader.quotes.sections;
 
 import android.os.Bundle;
 import ru.majestic.bashimreader.quotes.sections.impl.NewQuotesSectionManager;
+import ru.majestic.bashimreader.quotes.sections.impl.RandomQuotesSectionManager;
 
 public class QuoteSectionManagersFactory {
 
-   public static final int SECTION_TYPE_NEW = 1;
+   public static final int SECTION_TYPE_NEW     = 1;
+   public static final int SECTION_TYPE_RANDOM  = 2;
    
    private static final String SAVED_SECTION_TYPE = "SAVED_SECTION_TYPE";
    
@@ -34,8 +36,11 @@ public class QuoteSectionManagersFactory {
    
    public IQuotesSectionManager generateQuotesSectionManger() {      
       switch(currentSectionType) {
-      case SECTION_TYPE_NEW :
+      case SECTION_TYPE_NEW:
          return new NewQuotesSectionManager();
+         
+      case SECTION_TYPE_RANDOM:
+         return new RandomQuotesSectionManager();
          
       default:
          return null;

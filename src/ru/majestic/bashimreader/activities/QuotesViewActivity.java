@@ -44,8 +44,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
                                                             TopMenuStateListener,
                                                             OnVoteQuoteButtonClicked,
                                                             VoteResultListener {
-
-   private TextView downloadTxt; 
+    
    private ViewGroup baseLyt;
    private Button reloadQuotesBtn;
    private Button quickMenuAbyssBestBtn, quickMenuNewQuotesBtn, quickMenuRandomQuotesBtn;
@@ -114,8 +113,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
    private final void initGUI(final Bundle savedInstanceState) {
       setContentView(R.layout.activity_quotes_view);
-
-      downloadTxt = (TextView) findViewById(R.id.quote_view_download_txt);
+      
       baseLyt = (ViewGroup) findViewById(R.id.quotes_view_base_lyt);
       reloadQuotesBtn = (Button) findViewById(R.id.quotes_view_btn_reload);
       reloadQuotesLyt = (ViewGroup) findViewById(R.id.quotes_lyt_reload_quotes);
@@ -129,24 +127,20 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    }
 
    private final void initNightMode() {
-      if (applicationSettings.isNightModeEnabled()) {
-         downloadTxt.setTextColor(getResources().getColor(R.color.night_mode_text));
-
+      if (applicationSettings.isNightModeEnabled()) {         
          baseLyt.setBackgroundColor(getResources().getColor(R.color.night_mode_background));
          reloadQuotesLyt.setBackgroundColor(getResources().getColor(R.color.night_mode_background));
-
-         quickMenuAbyssBestBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
-         quickMenuNewQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
+         quickMenuAbyssBestBtn.setBackground(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
+         quickMenuNewQuotesBtn.setBackground(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
          if (quickMenuRandomQuotesBtn != null)
-            quickMenuRandomQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
-      } else {
-         downloadTxt.setTextColor(getResources().getColor(R.color.light_mode_text));
+            quickMenuRandomQuotesBtn.setBackground(getResources().getDrawable(R.drawable.night_mode_quote_menu_sub_item_click_background));
+      } else {         
          baseLyt.setBackgroundColor(getResources().getColor(R.color.light_mode_background));
          reloadQuotesLyt.setBackgroundColor(getResources().getColor(R.color.light_mode_background));
-         quickMenuAbyssBestBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
-         quickMenuNewQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
+         quickMenuAbyssBestBtn.setBackground(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
+         quickMenuNewQuotesBtn.setBackground(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
          if (quickMenuRandomQuotesBtn != null)
-            quickMenuRandomQuotesBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
+            quickMenuRandomQuotesBtn.setBackground(getResources().getDrawable(R.drawable.light_mode_quote_menu_sub_item_click_background));
       }
    }
 
@@ -229,35 +223,25 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
       case R.id.quotes_view_btn_reload:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_RELOAD_BTN_PRESSED);
-         downloadStatusView.show();
-         quoteListView.clear();
-         quotesSectionManager.reset();
-         quotesSectionManager.loadNextPage();
+         
          reloadQuotesLyt.setVisibility(View.GONE);
+         reloadQuotesList();        
          break;
 
       case R.id.quotes_view_menu_btn_new_quotes:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_NEW_QUOTE_BTN_PRESSED);
          
+         quoteSectionManagersFactory.setCurrentSectionType(QuoteSectionManagersFactory.SECTION_TYPE_NEW);         
          quotesMenu.toggleMenu();
-         downloadStatusView.show();
-         quoteListView.clear();
-         quoteSectionManagersFactory.setCurrentSectionType(QuoteSectionManagersFactory.SECTION_TYPE_NEW);
-         topMenuView.refreshSectionTitle(quoteSectionManagersFactory.getCurrentSectionType());         
-         quotesSectionManager = quoteSectionManagersFactory.generateQuotesSectionManger();
-         quotesSectionManager.setOnNewQuotesReadyListener(this);
-         quotesSectionManager.loadNextPage();                  
+         reloadQuotesList();                                   
          break;
 
       case R.id.quotes_view_menu_btn_random_quotes:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_RANDOM_BTN_PRESSED);
-         // isNewList = true;
-         // quotesListView.setVisibility(View.GONE);
-         // quotesManager.clearList();
-         // quotesManager.setState(QuotesManager.STATE_RANDOM_QUOTES);
-         // quotesManager.loadCitations();
-         // refreshListTitle();
-         // quotesMenu.toggleMenu();
+         
+         quoteSectionManagersFactory.setCurrentSectionType(QuoteSectionManagersFactory.SECTION_TYPE_RANDOM);         
+         quotesMenu.toggleMenu();
+         reloadQuotesList();
          break;
 
       case R.id.quotes_view_menu_btn_best_quotes:
@@ -357,13 +341,22 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
          break;
       }
    }
+   
+   private void reloadQuotesList() {
+      downloadStatusView.show();
+      quoteListView.clear();         
+      topMenuView.refreshSectionTitle(quoteSectionManagersFactory.getCurrentSectionType());         
+      quotesSectionManager = quoteSectionManagersFactory.generateQuotesSectionManger();
+      quotesSectionManager.setOnNewQuotesReadyListener(this);
+      quotesSectionManager.loadNextPage();
+   }
 
    @Override
    protected void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
-      quotesMenu.saveState(outState);
       
-
+      quotesMenu.saveState(outState);
+      quoteSectionManagersFactory.saveState(outState);
       quotesSectionManager.saveState(outState);
    }
 

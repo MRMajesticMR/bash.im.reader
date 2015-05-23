@@ -6,6 +6,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import ru.majestic.bashimreader.cache.IQuotesCacher;
+import ru.majestic.bashimreader.cache.listeners.QuotesCacheStatusListener;
 import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.loaders.IPageLoader;
 import ru.majestic.bashimreader.loaders.impl.PageLoader;
@@ -17,11 +19,13 @@ import ru.majestic.bashimreader.parsers.pagecont.IQuotesPageCountParser;
 import ru.majestic.bashimreader.parsers.pagecont.impl.EmptyQuotePageCountParser;
 import ru.majestic.bashimreader.quotes.sections.listeners.OnNewQuotesReadyListener;
 import android.os.Bundle;
+import android.util.Log;
 
 public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionManager, 
                                                                OnPageLoadListener, 
                                                                OnQuotesPagesParsedListener,
-                                                               OnQuotesPageCountParsedListener {
+                                                               OnQuotesPageCountParsedListener,
+                                                               QuotesCacheStatusListener {
 
    private static final String CITATION_CURRENT_PAGE_COUNT     = "CITATION_CURRENT_PAGE_COUNT";
    private static final String SAVED_QUOTES                    = "SAVED_QUOTES";
@@ -34,6 +38,7 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
    protected IPageLoader 	           pageLoader;
    protected IQuotesPageParser        quotesPageParser;
    protected IQuotesPageCountParser   quotePageCountParser;
+   protected IQuotesCacher            quotesCacher;
    
    private boolean                    newQuotesPrepearing;
 	private OnNewQuotesReadyListener   onNewQuotesReadyListener;
@@ -50,6 +55,9 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 		
 		quotePageCountParser = getQuotesPageCountParser();
 		quotePageCountParser.setOnQuotesPageCountParsedListener(this);
+		
+		quotesCacher = getQuotesCacher();
+		quotesCacher.setQuotesCacheStatusListener(this);
 	}
 	
 	public boolean isNoQuotes() {
@@ -130,21 +138,31 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 
    @Override
    public void onPageLoadError() {
-      this.onNewQuotesReadyListener.onLoadNewQuotesError();
+      if(quotesCacher.hasQuotes()) {
+         quotesCacher.loadSavedQuotes();
+      } else {
+         this.onNewQuotesReadyListener.onLoadNewQuotesError();
+         this.newQuotesPrepearing = false;
+      }
    }
    
    @Override
    public void onQuotesPageParsed(List<Quote> quotes) {
       this.nextPage = changeNextPage(getNextPage());
       this.quotes.addAll(quotes);
+      this.quotesCacher.saveQuotes(quotes);     
       this.onNewQuotesReadyListener.onNewQuoteReady(quotes);
       this.newQuotesPrepearing = false;
    }
 
    @Override
    public void onQuotePageParseError() {
-      this.onNewQuotesReadyListener.onLoadNewQuotesError();
-      this.newQuotesPrepearing = false;
+      if(quotesCacher.hasQuotes()) {
+         quotesCacher.loadSavedQuotes();
+      } else {
+         this.onNewQuotesReadyListener.onLoadNewQuotesError();
+         this.newQuotesPrepearing = false;
+      }
    }
    
    @Override
@@ -166,6 +184,18 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 	}
 	
 	protected abstract String             generateNextPageDownloadUrl   ();
-	protected abstract IQuotesPageParser  getQuotesPageParser           ();        
+	protected abstract IQuotesPageParser  getQuotesPageParser           (); 
+	protected abstract IQuotesCacher      getQuotesCacher               ();
+
+   @Override
+   public void onQuotesSaved() {
+      Log.i("CACHER_LISTENER", "Quotes saved in cache");
+   }
+
+   @Override
+   public void onQuotesLoaded(List<Quote> quotes) {
+      this.onNewQuotesReadyListener.onNewQuoteReady(quotes);
+      this.newQuotesPrepearing = false;
+   }
 	
 }

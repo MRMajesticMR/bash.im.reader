@@ -229,6 +229,9 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
       case R.id.quotes_view_btn_reload:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_RELOAD_BTN_PRESSED);
+         downloadStatusView.show();
+         quoteListView.clear();
+         quotesSectionManager.reset();
          quotesSectionManager.loadNextPage();
          reloadQuotesLyt.setVisibility(View.GONE);
          break;

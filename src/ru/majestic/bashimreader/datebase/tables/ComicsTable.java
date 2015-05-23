@@ -5,7 +5,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-public class ComicsTable implements Table {
+public class ComicsTable implements ITable {
 
    private static final String DEBUG_TAG = "DATEBASE_BASH";
 

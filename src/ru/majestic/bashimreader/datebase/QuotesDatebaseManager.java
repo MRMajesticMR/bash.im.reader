@@ -9,7 +9,7 @@ import ru.majestic.bashimreader.datebase.exceptions.ChangeTableException;
 import ru.majestic.bashimreader.datebase.tables.ComicsTable;
 import ru.majestic.bashimreader.datebase.tables.LikedQuotesTable;
 import ru.majestic.bashimreader.datebase.tables.NewQuotesTable;
-import ru.majestic.bashimreader.datebase.tables.Table;
+import ru.majestic.bashimreader.datebase.tables.ITable;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,7 +25,7 @@ public class QuotesDatebaseManager extends SQLiteOpenHelper {
 	private static final int DB_VERSION = 2;
 	private static final String DB_NAME = "Bash.im.db";
 
-	private final List<Table> tables = new ArrayList<Table>();
+	private final List<ITable> tables = new ArrayList<ITable>();
 
 	public QuotesDatebaseManager(final Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
@@ -83,7 +83,7 @@ public class QuotesDatebaseManager extends SQLiteOpenHelper {
 		return items;
 	}
 	
-	  public synchronized final void saveDownloadedQuotesList(final List<Quote> downloadedQuotes) {
+	  public synchronized final void saveDownloadedQuotesList(List<Quote> downloadedQuotes) {
 	      final SQLiteDatabase db = getWritableDatabase();
 	      for(int i = 0; i < downloadedQuotes.size(); i++) {
 	         final Quote quote = downloadedQuotes.get(i);
@@ -146,7 +146,7 @@ public class QuotesDatebaseManager extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.beginTransaction();
 		try {
-			for (Table table : tables) {
+			for (ITable table : tables) {
 				table.createTable(db);
 			}
 			db.setTransactionSuccessful();
@@ -161,7 +161,7 @@ public class QuotesDatebaseManager extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.beginTransaction();
 		try {
-			for (Table table : tables) {
+			for (ITable table : tables) {
 				table.deleteTable(db);
 			}
 			db.setTransactionSuccessful();

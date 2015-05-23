@@ -38,9 +38,9 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
    protected IPageLoader 	           pageLoader;
    protected IQuotesPageParser        quotesPageParser;
    protected IQuotesPageCountParser   quotePageCountParser;
-   protected IQuotesCacher            quotesCacher;
+   protected IQuotesCacher            quotesCacher;   
+   protected boolean                  newQuotesPrepearing;
    
-   private boolean                    newQuotesPrepearing;
 	private OnNewQuotesReadyListener   onNewQuotesReadyListener;
 	
 	public IQuoteSectionManagerSkeleton() {
@@ -58,6 +58,10 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 		
 		quotesCacher = getQuotesCacher();
 		quotesCacher.setQuotesCacheStatusListener(this);
+	}
+	
+	public boolean isNeedLoadMorePage() {
+	   return true;
 	}
 	
 	public boolean isNoQuotes() {

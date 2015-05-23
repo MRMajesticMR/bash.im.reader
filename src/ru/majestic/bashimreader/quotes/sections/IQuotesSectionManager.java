@@ -7,6 +7,7 @@ public interface IQuotesSectionManager {
 
    public boolean isNoQuotes();
    public boolean isNewQuotesPreparing();
+   public boolean isNeedLoadMorePage();
    public void reset();
 	public void loadNextPage();
 	public void setOnNewQuotesReadyListener(OnNewQuotesReadyListener onNewQuotesReadyListener);

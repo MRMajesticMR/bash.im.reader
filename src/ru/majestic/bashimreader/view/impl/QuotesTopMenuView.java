@@ -45,6 +45,10 @@ public class QuotesTopMenuView extends ITopMenuViewSkeleton implements OnClickLi
       case QuoteSectionManagersFactory.SECTION_TYPE_RANDOM:
          sectionTitle.setText("Случайные");
          break;
+         
+      case QuoteSectionManagersFactory.SECTION_TYPE_BEST:
+         sectionTitle.setText("Лучшие");
+         break;
       
       }
    }

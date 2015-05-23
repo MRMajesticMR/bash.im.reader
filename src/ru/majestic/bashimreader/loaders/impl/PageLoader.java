@@ -18,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 import ru.majestic.bashimreader.loaders.IPageLoader;
 import ru.majestic.bashimreader.loaders.listeners.OnPageLoadListener;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class PageLoader implements IPageLoader {
    
@@ -53,6 +54,7 @@ public class PageLoader implements IPageLoader {
          @Override
          protected String doInBackground(String... params) {
             try {
+               Log.i("PAGE_LOADER", "URL: " + params[0]);
                final HttpResponse response = httpClient.execute(new HttpGet(params[0]));
                if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
                   return null;

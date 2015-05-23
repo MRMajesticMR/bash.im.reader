@@ -246,13 +246,10 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
       case R.id.quotes_view_menu_btn_best_quotes:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_BEST_BTN_PRESSED);
-         // isNewList = true;
-         // quotesListView.setVisibility(View.GONE);
-         // quotesManager.clearList();
-         // quotesManager.setState(QuotesManager.STATE_BEST_QUOTES);
-         // quotesManager.loadCitations();
-         // refreshListTitle();
-         // quotesMenu.toggleMenu();
+
+         quoteSectionManagersFactory.setCurrentSectionType(QuoteSectionManagersFactory.SECTION_TYPE_BEST);         
+         quotesMenu.toggleMenu();
+         reloadQuotesList();
          break;
 
       case R.id.quotes_view_menu_btn_by_rating:
@@ -374,7 +371,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
    @Override
    public void onNeedLoadMoreQuotes() {
-      if (!quotesSectionManager.isNewQuotesPreparing()) {
+      if (!quotesSectionManager.isNewQuotesPreparing() && quotesSectionManager.isNeedLoadMorePage()) {
          downloadStatusView.show();
          quotesSectionManager.loadNextPage();
       }

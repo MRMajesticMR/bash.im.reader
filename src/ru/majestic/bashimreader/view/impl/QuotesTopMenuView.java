@@ -50,6 +50,10 @@ public class QuotesTopMenuView extends ITopMenuViewSkeleton implements OnClickLi
          sectionTitle.setText("Лучшие");
          break;
       
+      case QuoteSectionManagersFactory.SECTION_TYPE_BY_RATING:
+         sectionTitle.setText("По рейтингу");
+         break;
+      
       }
    }
 

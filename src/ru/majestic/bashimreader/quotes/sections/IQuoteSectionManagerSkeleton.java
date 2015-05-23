@@ -180,7 +180,7 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 	}
 	
 	protected int changeNextPage(int currentPage) {
-	   return currentPage++;
+	   return ++currentPage;
 	}
 	
 	protected IQuotesPageCountParser getQuotesPageCountParser() {

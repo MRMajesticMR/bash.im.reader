@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.majestic.bashimreader.data.Quote;
-import ru.majestic.bashimreader.datebase.IQuotesDatabaseHelper;
+import ru.majestic.bashimreader.datebase.ILikedQuotesDatabaseHelper;
 import ru.majestic.bashimreader.datebase.tables.ITable;
 import ru.majestic.bashimreader.datebase.tables.LikedQuotesTable;
 import android.database.Cursor;
@@ -12,13 +12,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class QuotesDatabaseHelper implements IQuotesDatabaseHelper {
+public class LikedQuotesDatabaseHelper implements ILikedQuotesDatabaseHelper {
 
-   private static final String LOG_TAG = QuotesDatabaseHelper.class.getSimpleName();
+   private static final String LOG_TAG = LikedQuotesDatabaseHelper.class.getSimpleName();
    
    private SQLiteOpenHelper dbHelper;
    
-   public QuotesDatabaseHelper(SQLiteOpenHelper dbHelper) {
+   public LikedQuotesDatabaseHelper(SQLiteOpenHelper dbHelper) {
       this.dbHelper = dbHelper;
    }
    

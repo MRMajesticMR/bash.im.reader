@@ -3,7 +3,7 @@ package ru.majestic.bashimreader.quotes.sections.impl;
 import java.util.List;
 
 import ru.majestic.bashimreader.data.Quote;
-import ru.majestic.bashimreader.datebase.IQuotesDatabaseHelper;
+import ru.majestic.bashimreader.datebase.ILikedQuotesDatabaseHelper;
 import ru.majestic.bashimreader.parsers.IQuotesPageParser;
 import ru.majestic.bashimreader.parsers.impl.NullQuotesPageParser;
 import ru.majestic.bashimreader.quotes.sections.IQuoteSectionManagerSkeleton;
@@ -11,10 +11,10 @@ import android.os.AsyncTask;
 
 public class LikedQuotesSectionManager extends IQuoteSectionManagerSkeleton {
 
-   private IQuotesDatabaseHelper quotesDatabaseHelper;
+   private ILikedQuotesDatabaseHelper quotesDatabaseHelper;
 
    
-   public void setQuotesDatabaseHelper(IQuotesDatabaseHelper quotesDatabaseHelper) {
+   public void setQuotesDatabaseHelper(ILikedQuotesDatabaseHelper quotesDatabaseHelper) {
       this.quotesDatabaseHelper = quotesDatabaseHelper;
    }
    

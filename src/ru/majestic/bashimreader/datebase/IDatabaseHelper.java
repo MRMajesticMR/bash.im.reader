@@ -1,7 +1,12 @@
 package ru.majestic.bashimreader.datebase;
 
+import android.content.Context;
+
 public interface IDatabaseHelper {
    
-   public IQuotesDatabaseHelper  getQuotesDatabaseHelper ();
-
+   public void                         init                         (Context context);
+   
+   public ILikedQuotesDatabaseHelper   getLikedQuotesDatabaseHelper ();
+   public INewQuotesDatabaseHelper     getNewQuotesDatabaseHelper   ();
+   
 }

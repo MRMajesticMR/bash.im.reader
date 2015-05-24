@@ -5,7 +5,7 @@ import java.util.List;
 import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.datebase.tables.ITable;
 
-public interface IQuotesDatabaseHelper {
+public interface ILikedQuotesDatabaseHelper {
 
    public ITable        getHelperTable       ();
    

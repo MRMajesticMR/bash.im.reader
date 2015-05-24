@@ -64,7 +64,6 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    private QuoteSectionManagersFactory quoteSectionManagersFactory;
    private IQuotesSectionManager quotesSectionManager;
    private IVoter voter;
-   private IDatabaseHelper databaseHelper;
    private ILikedQuotesHandler likedQuotesHandler;
    
    private IViewsConfigHandler viewConfigHandler;
@@ -79,10 +78,8 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       applicationSettings = new ApplicationSettings(this);
 
       initGUI(savedInstanceState);
-
-      databaseHelper = new DatabaseHelper(this);
       
-      likedQuotesHandler = new LikedQuotesHandler(databaseHelper.getQuotesDatabaseHelper());
+      likedQuotesHandler = new LikedQuotesHandler(DatabaseHelper.getInstance().getLikedQuotesDatabaseHelper());
       likedQuotesHandler.setLikedQuotesHandlerListener(this);
       
       voter = new QuotesVoter();
@@ -110,7 +107,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       quotesSectionManager.restoreState(savedInstanceState);            
       
       if(quoteSectionManagersFactory.getCurrentSectionType() == QuoteSectionManagersFactory.SECTION_TYPE_LIKED)
-         ((LikedQuotesSectionManager) quotesSectionManager).setQuotesDatabaseHelper(databaseHelper.getQuotesDatabaseHelper());
+         ((LikedQuotesSectionManager) quotesSectionManager).setQuotesDatabaseHelper(DatabaseHelper.getInstance().getLikedQuotesDatabaseHelper());
       
       viewConfigHandler = new ViewsConfigHandler();
       
@@ -280,33 +277,23 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
       case R.id.quotes_view_quick_menu_btn_abyss_best:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_QM_ABYSS_BEST_BTN_PRESSED);
-         // isNewList = true;
-         // quotesListView.setVisibility(View.GONE);
-         // quotesManager.clearList();
-         // quotesManager.setState(QuotesManager.STATE_ABYSS_BEST);
-         // quotesManager.loadCitations();
-         // refreshListTitle();
+         
+         quoteSectionManagersFactory.setCurrentSectionType(QuoteSectionManagersFactory.SECTION_TYPE_ABYSS_BEST);         
+         reloadQuotesList();
          break;
 
       case R.id.quotes_view_quick_menu_btn_new_quotes:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_QM_NEW_BTN_PRESSED);
-         // isNewList = true;
-         // quotesListView.setVisibility(View.GONE);
-         // quotesManager.setFromCache(false);
-         // quotesManager.clearList();
-         // quotesManager.setState(QuotesManager.STATE_NEW_QUOTES);
-         // quotesManager.loadCitations();
-         // refreshListTitle();
+         
+         quoteSectionManagersFactory.setCurrentSectionType(QuoteSectionManagersFactory.SECTION_TYPE_NEW);         
+         reloadQuotesList();
          break;
 
       case R.id.quotes_view_quick_menu_btn_random_quotes:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_QM_RANDOM_BTN_PRESSED);
-         // isNewList = true;
-         // quotesListView.setVisibility(View.GONE);
-         // quotesManager.clearList();
-         // quotesManager.setState(QuotesManager.STATE_RANDOM_QUOTES);
-         // quotesManager.loadCitations();
-         // refreshListTitle();
+         
+         quoteSectionManagersFactory.setCurrentSectionType(QuoteSectionManagersFactory.SECTION_TYPE_RANDOM);         
+         reloadQuotesList();
          break;
       }
    }
@@ -318,7 +305,7 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       quotesSectionManager = quoteSectionManagersFactory.generateQuotesSectionManger();
       
       if(quoteSectionManagersFactory.getCurrentSectionType() == QuoteSectionManagersFactory.SECTION_TYPE_LIKED)
-         ((LikedQuotesSectionManager) quotesSectionManager).setQuotesDatabaseHelper(databaseHelper.getQuotesDatabaseHelper());
+         ((LikedQuotesSectionManager) quotesSectionManager).setQuotesDatabaseHelper(DatabaseHelper.getInstance().getLikedQuotesDatabaseHelper());
       
       quotesSectionManager.setOnNewQuotesReadyListener(this);
       quotesSectionManager.loadNextPage();                  

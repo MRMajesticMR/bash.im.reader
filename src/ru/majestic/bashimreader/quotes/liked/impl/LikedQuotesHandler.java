@@ -3,14 +3,14 @@ package ru.majestic.bashimreader.quotes.liked.impl;
 import java.util.List;
 
 import ru.majestic.bashimreader.data.Quote;
-import ru.majestic.bashimreader.datebase.IQuotesDatabaseHelper;
+import ru.majestic.bashimreader.datebase.ILikedQuotesDatabaseHelper;
 import ru.majestic.bashimreader.quotes.liked.ILikedQuotesHandlerSkeleton;
 
 public class LikedQuotesHandler extends ILikedQuotesHandlerSkeleton {
 
-   private IQuotesDatabaseHelper quotesDatabaseHelper;
+   private ILikedQuotesDatabaseHelper quotesDatabaseHelper;
    
-   public LikedQuotesHandler(IQuotesDatabaseHelper quotesDatabaseHelper) {
+   public LikedQuotesHandler(ILikedQuotesDatabaseHelper quotesDatabaseHelper) {
       this.quotesDatabaseHelper = quotesDatabaseHelper;
    }
    

@@ -4,22 +4,32 @@ import java.util.List;
 
 import ru.majestic.bashimreader.cache.IQuotesCacherSkeleton;
 import ru.majestic.bashimreader.data.Quote;
+import ru.majestic.bashimreader.datebase.INewQuotesDatabaseHelper;
 
 public class NewQuotesCacher extends IQuotesCacherSkeleton {
 
+   private INewQuotesDatabaseHelper newQuotesDatabaseHelper;
+   
+   public NewQuotesCacher(INewQuotesDatabaseHelper newQuotesDatabaseHelper) {
+      this.newQuotesDatabaseHelper = newQuotesDatabaseHelper;
+   }
+   
    @Override
    public boolean hasQuotes() {
-      return false;
+      return newQuotesDatabaseHelper.hasQuotes();
    }
 
    @Override
    protected void saveQuotesAsynk(List<Quote> quotes) {
-      
+      for(Quote quote: quotes) {
+         if(!newQuotesDatabaseHelper.isQuoteAlreadySaved(quote))
+            newQuotesDatabaseHelper.saveNewQuote(quote);
+      }
    }
 
    @Override
    protected List<Quote> loadQuotesAsynk() {
-      return null;
+      return newQuotesDatabaseHelper.getNewQuotes();
    }
 
 }

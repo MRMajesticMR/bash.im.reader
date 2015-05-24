@@ -191,10 +191,7 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
       return new EmptyQuotesCacher();
    }
 	
-	protected abstract String             generateNextPageDownloadUrl   ();
-	protected abstract IQuotesPageParser  getQuotesPageParser           (); 	
-
-   @Override
+	@Override
    public void onQuotesSaved() {
       Log.i("CACHER_LISTENER", "Quotes saved in cache");
    }
@@ -204,5 +201,10 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
       this.onNewQuotesReadyListener.onNewQuoteReady(quotes);
       this.newQuotesPrepearing = false;
    }
+   
+   protected abstract String             generateNextPageDownloadUrl   ();
+   protected abstract IQuotesPageParser  getQuotesPageParser           ();    
+
+
 	
 }

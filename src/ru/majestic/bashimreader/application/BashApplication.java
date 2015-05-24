@@ -1,6 +1,7 @@
 package ru.majestic.bashimreader.application;
 
 import ru.majestic.bashimreader.billing.GoogleBillingManager;
+import ru.majestic.bashimreader.datebase.impl.DatabaseHelper;
 import ru.majestic.bashimreader.utils.ApplicationUtils;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -15,6 +16,8 @@ public class BashApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		DatabaseHelper.getInstance().init(this);
 		
 		FlurryAgent.setLogEnabled(false);
 		

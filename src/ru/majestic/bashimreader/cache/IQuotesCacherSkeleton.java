@@ -29,17 +29,16 @@ public abstract class IQuotesCacherSkeleton implements IQuotesCacher {
 
    @Override
    public void loadSavedQuotes() {
-      new AsyncTask<Void, Integer, Void>() {
+      new AsyncTask<Void, Integer, List<Quote>>() {
 
          @Override
-         protected Void doInBackground(Void... params) {
-            loadQuotesAsynk();
-            return null;
+         protected List<Quote> doInBackground(Void... params) {            
+            return loadQuotesAsynk();
          }
 
          @Override
-         protected void onPostExecute(Void result) {
-            quotesCacheStatusListener.onQuotesSaved();
+         protected void onPostExecute(List<Quote> quotes) {
+            quotesCacheStatusListener.onQuotesLoaded(quotes);
          }
       }.execute();
    }

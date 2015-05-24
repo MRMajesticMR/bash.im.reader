@@ -30,7 +30,7 @@ public class QuotesDatebaseManager extends SQLiteOpenHelper {
 	public QuotesDatebaseManager(final Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
 //		tables.add(new LikedQuotesTable());
-		tables.add(new NewQuotesTable());
+//		tables.add(new NewQuotesTable());
 		tables.add(new ComicsTable());
 	}
 

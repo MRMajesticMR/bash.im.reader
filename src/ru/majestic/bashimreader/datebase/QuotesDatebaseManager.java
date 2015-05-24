@@ -20,16 +20,16 @@ public class QuotesDatebaseManager extends SQLiteOpenHelper {
 
 	public enum Type {
 		NEW, LIKED
-	};
+	};	
 
-	private static final int DB_VERSION = 2;
-	private static final String DB_NAME = "Bash.im.db";
+	public static final int DB_VERSION = 2;
+	public static final String DB_NAME = "Bash.im.db";
 
-	private final List<ITable> tables = new ArrayList<ITable>();
+	private final List<ITable> tables = new ArrayList<ITable>();		
 
 	public QuotesDatebaseManager(final Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
-		tables.add(new LikedQuotesTable());
+//		tables.add(new LikedQuotesTable());
 		tables.add(new NewQuotesTable());
 		tables.add(new ComicsTable());
 	}
@@ -55,19 +55,19 @@ public class QuotesDatebaseManager extends SQLiteOpenHelper {
 		}
 	}
 
-	public synchronized final void saveLikedQuotes(final Quote quote) throws Exception {
-		final SQLiteDatabase db = getWritableDatabase();
-		db.beginTransaction();
-		try {
-			db.execSQL("INSERT INTO " + LikedQuotesTable.TABLE_NAME + " VALUES (" + String.valueOf(quote.getId()) + ", \""
-					+ quote.getContent() + "\", " + quote.getRating() + ", \"" + quote.getDateString() + "\");");
-			db.setTransactionSuccessful();
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			db.endTransaction();
-		}
-	}
+//	public synchronized final void saveLikedQuotes(final Quote quote) throws Exception {
+//		final SQLiteDatabase db = getWritableDatabase();
+//		db.beginTransaction();
+//		try {
+//			db.execSQL("INSERT INTO " + LikedQuotesTable.TABLE_NAME + " VALUES (" + String.valueOf(quote.getId()) + ", \""
+//					+ quote.getContent() + "\", " + quote.getRating() + ", \"" + quote.getDateString() + "\");");
+//			db.setTransactionSuccessful();
+//		} catch (Exception e) {
+//			throw e;
+//		} finally {
+//			db.endTransaction();
+//		}
+//	}
 
 	public synchronized final List<Quote> getLikedQuotes() {
 		final List<Quote> items = new ArrayList<Quote>();

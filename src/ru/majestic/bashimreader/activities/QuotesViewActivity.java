@@ -5,9 +5,14 @@ import java.util.List;
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.ads.IAdManager;
 import ru.majestic.bashimreader.data.Quote;
+import ru.majestic.bashimreader.datebase.IDatabaseHelper;
+import ru.majestic.bashimreader.datebase.impl.DatabaseHelper;
 import ru.majestic.bashimreader.flurry.utils.FlurryLogEventsDictionary;
 import ru.majestic.bashimreader.menu.QuotesMenu;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
+import ru.majestic.bashimreader.quotes.liked.ILikedQuotesHandler;
+import ru.majestic.bashimreader.quotes.liked.impl.LikedQuotesHandler;
+import ru.majestic.bashimreader.quotes.liked.listeners.LikedQuotesHandlerListener;
 import ru.majestic.bashimreader.quotes.sections.IQuotesSectionManager;
 import ru.majestic.bashimreader.quotes.sections.QuoteSectionManagersFactory;
 import ru.majestic.bashimreader.quotes.sections.listeners.OnNewQuotesReadyListener;
@@ -28,12 +33,12 @@ import ru.majestic.bashimreader.view.impl.TopSlideDownDownloadStatusView;
 import ru.majestic.bashimreader.view.listeners.TopMenuStateListener;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
@@ -43,7 +48,8 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
                                                             OnNeedLoadMoreQuotesListener,
                                                             TopMenuStateListener,
                                                             OnVoteQuoteButtonClicked,
-                                                            VoteResultListener {
+                                                            VoteResultListener,
+                                                            LikedQuotesHandlerListener {
     
    private ViewGroup baseLyt;
    private Button reloadQuotesBtn;
@@ -57,6 +63,8 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    private QuoteSectionManagersFactory quoteSectionManagersFactory;
    private IQuotesSectionManager quotesSectionManager;
    private IVoter voter;
+   private IDatabaseHelper databaseHelper;
+   private ILikedQuotesHandler likedQuotesHandler;
    
    private IViewsConfigHandler viewConfigHandler;
    private IQuoteListView quoteListView;
@@ -71,6 +79,11 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
       initGUI(savedInstanceState);
 
+      databaseHelper = new DatabaseHelper(this);
+      
+      likedQuotesHandler = new LikedQuotesHandler(databaseHelper.getQuotesDatabaseHelper());
+      likedQuotesHandler.setLikedQuotesHandlerListener(this);
+      
       voter = new QuotesVoter();
       voter.setVoteResultListener(this);
       
@@ -399,11 +412,12 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    @Override
    public void onVoteUpButtonClicked(Quote quote) {
       voter.vote(quote, VoteStatus.UP);
+      likedQuotesHandler.saveLikedQuote(quote);
    }
 
    @Override
    public void onVoteDownButtonClicked(Quote quote) {
-      voter.vote(quote, VoteStatus.DOWN);      
+      voter.vote(quote, VoteStatus.DOWN);
    }
 
    @Override
@@ -414,6 +428,23 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
    @Override
    public void onVoteFailed() {
       Toast.makeText(this, "Опаньки! Почему-то голос не был отправлен...", Toast.LENGTH_SHORT).show();      
+   }
+
+   @Override
+   public void onLikedQuoteSaved() {
+      Log.i("LIKED_QUOTES", "Saved");
+   }
+
+   @Override
+   public void onLoadLikedQuotesError() {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void onLoadedLikedQuotes(List<Quote> quotes) {
+      // TODO Auto-generated method stub
+      
    }
 
 }

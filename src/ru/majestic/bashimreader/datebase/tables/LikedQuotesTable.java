@@ -9,11 +9,11 @@ public class LikedQuotesTable implements ITable {
    
    private static final String DEBUG_TAG = "DATEBASE_BASH";
    
-   public static final String TABLE_NAME = "LIKED_QUOTES";
+   public static final String TABLE_NAME  = "LIKED_QUOTES";
    
-   public static final String ROW_TEXT = "TEXT";
-   public static final String ROW_RATING = "RATING";
-   public static final String ROW_DATE = "DATE";
+   public static final String ROW_TEXT    = "TEXT";
+   public static final String ROW_RATING  = "RATING";
+   public static final String ROW_DATE    = "DATE";
 
    @Override
    public void createTable(SQLiteDatabase db) throws ChangeTableException {

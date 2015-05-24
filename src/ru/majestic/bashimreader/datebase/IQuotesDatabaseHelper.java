@@ -11,6 +11,7 @@ public interface IQuotesDatabaseHelper {
    
    public void          saveLikedQuote       (Quote quote);
    public boolean       isQuoteAlreadyLiked  (Quote quote);
+   
    public List<Quote>   getLikedQuotes       ();
    public void          clearLikedQuotes     ();
    

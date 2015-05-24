@@ -178,7 +178,7 @@ public class QuotesManager implements OnPageLoadListener {
 			break;
 		case STATE_LIKED_QUOTES:
 			loading = false;
-			quotes = quotesDatebaseManager.getLikedQuotes();
+//			quotes = quotesDatebaseManager.getLikedQuotes();
 			downloadingView.startAnimation(downloadViewOutAnimation);
 			if(quotes.size() == 0)
 				citationListener.onCitationPrepareError();

@@ -69,19 +69,19 @@ public class QuotesDatebaseManager extends SQLiteOpenHelper {
 //		}
 //	}
 
-	public synchronized final List<Quote> getLikedQuotes() {
-		final List<Quote> items = new ArrayList<Quote>();
-		final SQLiteDatabase db = getReadableDatabase();
-		final Cursor cursor;
-		cursor = db.rawQuery("SELECT * FROM " + LikedQuotesTable.TABLE_NAME + " ORDER BY " + LikedQuotesTable.ROW_DATE + " DESC;", null);
-		cursor.move(-1);
-		while (cursor.moveToNext()) {
-			items.add(cursorToQuote(cursor));
-		}
-		cursor.close();
-		db.close();
-		return items;
-	}
+//	public synchronized final List<Quote> getLikedQuotes() {
+//		final List<Quote> items = new ArrayList<Quote>();
+//		final SQLiteDatabase db = getReadableDatabase();
+//		final Cursor cursor;
+//		cursor = db.rawQuery("SELECT * FROM " + LikedQuotesTable.TABLE_NAME + " ORDER BY " + LikedQuotesTable.ROW_DATE + " DESC;", null);
+//		cursor.move(-1);
+//		while (cursor.moveToNext()) {
+//			items.add(cursorToQuote(cursor));
+//		}
+//		cursor.close();
+//		db.close();
+//		return items;
+//	}
 	
 	  public synchronized final void saveDownloadedQuotesList(List<Quote> downloadedQuotes) {
 	      final SQLiteDatabase db = getWritableDatabase();

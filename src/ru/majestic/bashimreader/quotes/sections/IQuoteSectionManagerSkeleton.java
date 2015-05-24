@@ -39,9 +39,8 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
    protected IQuotesPageParser        quotesPageParser;
    protected IQuotesPageCountParser   quotePageCountParser;
    protected IQuotesCacher            quotesCacher;   
-   protected boolean                  newQuotesPrepearing;
-   
-	private OnNewQuotesReadyListener   onNewQuotesReadyListener;
+   protected boolean                  newQuotesPrepearing;   
+	protected OnNewQuotesReadyListener onNewQuotesReadyListener;
 	
 	public IQuoteSectionManagerSkeleton() {
 		quotes 			       = new LinkedList<Quote>();

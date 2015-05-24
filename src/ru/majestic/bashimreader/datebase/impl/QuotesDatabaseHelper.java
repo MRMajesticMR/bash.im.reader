@@ -1,5 +1,6 @@
 package ru.majestic.bashimreader.datebase.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.majestic.bashimreader.data.Quote;
@@ -55,13 +56,28 @@ public class QuotesDatabaseHelper implements IQuotesDatabaseHelper {
 
    @Override
    public List<Quote> getLikedQuotes() {
-      // TODO Auto-generated method stub
-      return null;
+      final List<Quote> items = new ArrayList<Quote>();
+      final SQLiteDatabase db = dbHelper.getReadableDatabase();
+      final Cursor cursor;
+      cursor = db.rawQuery("SELECT * FROM " + LikedQuotesTable.TABLE_NAME + " ORDER BY " + LikedQuotesTable.ROW_DATE + " DESC;", null);
+      cursor.move(-1);
+      while (cursor.moveToNext()) {
+         items.add(cursorToQuote(cursor));
+      }
+      cursor.close();
+      db.close();
+      return items;
    }
 
    @Override
    public void clearLikedQuotes() {
       // TODO Auto-generated method stub      
-   }   
+   }
+   
+   private Quote cursorToQuote(Cursor cursor) {
+      return new Quote(cursor.getInt(cursor.getColumnIndex("_id")), cursor.getInt(cursor.getColumnIndex(LikedQuotesTable.ROW_RATING)),
+            cursor.getString(cursor.getColumnIndex(LikedQuotesTable.ROW_TEXT)), cursor.getString(cursor
+                  .getColumnIndex(LikedQuotesTable.ROW_DATE)));
+   }
 
 }

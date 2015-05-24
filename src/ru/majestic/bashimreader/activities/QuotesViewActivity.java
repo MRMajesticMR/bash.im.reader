@@ -15,6 +15,7 @@ import ru.majestic.bashimreader.quotes.liked.impl.LikedQuotesHandler;
 import ru.majestic.bashimreader.quotes.liked.listeners.LikedQuotesHandlerListener;
 import ru.majestic.bashimreader.quotes.sections.IQuotesSectionManager;
 import ru.majestic.bashimreader.quotes.sections.QuoteSectionManagersFactory;
+import ru.majestic.bashimreader.quotes.sections.impl.LikedQuotesSectionManager;
 import ru.majestic.bashimreader.quotes.sections.listeners.OnNewQuotesReadyListener;
 import ru.majestic.bashimreader.quotes.view.IQuoteListView;
 import ru.majestic.bashimreader.quotes.view.impl.QuoteListView;
@@ -104,9 +105,12 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       quoteSectionManagersFactory.restoreState(savedInstanceState);
 
       topMenuView.refreshSectionTitle(quoteSectionManagersFactory.getCurrentSectionType());
-      quotesSectionManager = quoteSectionManagersFactory.generateQuotesSectionManger();
+      quotesSectionManager = quoteSectionManagersFactory.generateQuotesSectionManger();                  
       quotesSectionManager.setOnNewQuotesReadyListener(this);
       quotesSectionManager.restoreState(savedInstanceState);            
+      
+      if(quoteSectionManagersFactory.getCurrentSectionType() == QuoteSectionManagersFactory.SECTION_TYPE_LIKED)
+         ((LikedQuotesSectionManager) quotesSectionManager).setQuotesDatabaseHelper(databaseHelper.getQuotesDatabaseHelper());
       
       viewConfigHandler = new ViewsConfigHandler();
       
@@ -275,13 +279,10 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
       case R.id.quotes_view_menu_btn_liked:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_LIKED_BTN_PRESSED);
-         // isNewList = true;
-         // quotesListView.setVisibility(View.GONE);
-         // quotesManager.clearList();
-         // quotesManager.setState(QuotesManager.STATE_LIKED_QUOTES);
-         // quotesManager.loadCitations();
-         // refreshListTitle();
-         // quotesMenu.toggleMenu();
+         
+         quoteSectionManagersFactory.setCurrentSectionType(QuoteSectionManagersFactory.SECTION_TYPE_LIKED);         
+         quotesMenu.toggleMenu();
+         reloadQuotesList();
          break;
 
       case R.id.quotes_view_menu_btn_abyss:
@@ -354,8 +355,12 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       quoteListView.clear();         
       topMenuView.refreshSectionTitle(quoteSectionManagersFactory.getCurrentSectionType());         
       quotesSectionManager = quoteSectionManagersFactory.generateQuotesSectionManger();
+      
+      if(quoteSectionManagersFactory.getCurrentSectionType() == QuoteSectionManagersFactory.SECTION_TYPE_LIKED)
+         ((LikedQuotesSectionManager) quotesSectionManager).setQuotesDatabaseHelper(databaseHelper.getQuotesDatabaseHelper());
+      
       quotesSectionManager.setOnNewQuotesReadyListener(this);
-      quotesSectionManager.loadNextPage();
+      quotesSectionManager.loadNextPage();                  
    }
 
    @Override

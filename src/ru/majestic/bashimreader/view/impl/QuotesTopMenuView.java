@@ -53,7 +53,10 @@ public class QuotesTopMenuView extends ITopMenuViewSkeleton implements OnClickLi
       case QuoteSectionManagersFactory.SECTION_TYPE_BY_RATING:
          sectionTitle.setText("По рейтингу");
          break;
-      
+         
+      case QuoteSectionManagersFactory.SECTION_TYPE_LIKED:
+         sectionTitle.setText("Понравившиеся");
+         break;      
       }
    }
 

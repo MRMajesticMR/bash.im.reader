@@ -1,7 +1,5 @@
 package ru.majestic.bashimreader.quotes.sections.impl;
 
-import ru.majestic.bashimreader.cache.IQuotesCacher;
-import ru.majestic.bashimreader.cache.impl.EmptyQuotesCacher;
 import ru.majestic.bashimreader.parsers.IQuotesPageParser;
 import ru.majestic.bashimreader.parsers.impl.ByRatingQuotesPageParser;
 import ru.majestic.bashimreader.parsers.pagecont.IQuotesPageCountParser;
@@ -24,11 +22,6 @@ public class ByRatingQuotesSectionManager extends IQuoteSectionManagerSkeleton {
    @Override
    protected IQuotesPageCountParser getQuotesPageCountParser() {
       return new QuotePageCountParser();
-   }
-
-   @Override
-   protected IQuotesCacher getQuotesCacher() {
-      return new EmptyQuotesCacher();
    }
 
 }

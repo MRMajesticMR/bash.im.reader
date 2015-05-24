@@ -1,6 +1,7 @@
 package ru.majestic.bashimreader.quotes.sections;
 
 import android.os.Bundle;
+import ru.majestic.bashimreader.quotes.sections.impl.AbyssQuotesSectionManager;
 import ru.majestic.bashimreader.quotes.sections.impl.BestQuotesSectionManager;
 import ru.majestic.bashimreader.quotes.sections.impl.ByRatingQuotesSectionManager;
 import ru.majestic.bashimreader.quotes.sections.impl.LikedQuotesSectionManager;
@@ -14,6 +15,8 @@ public class QuoteSectionManagersFactory {
    public static final int SECTION_TYPE_BEST          = 3;
    public static final int SECTION_TYPE_BY_RATING     = 4;
    public static final int SECTION_TYPE_LIKED         = 5;
+   
+   public static final int SECTION_TYPE_ABYSS         = 6;
    
    private static final String SAVED_SECTION_TYPE = "SAVED_SECTION_TYPE";
    
@@ -56,6 +59,9 @@ public class QuoteSectionManagersFactory {
          
       case SECTION_TYPE_LIKED:
          return new LikedQuotesSectionManager();
+         
+      case SECTION_TYPE_ABYSS:
+         return new AbyssQuotesSectionManager();
          
       default:
          return null;

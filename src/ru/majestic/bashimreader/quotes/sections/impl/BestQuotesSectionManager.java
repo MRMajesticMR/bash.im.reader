@@ -1,7 +1,5 @@
 package ru.majestic.bashimreader.quotes.sections.impl;
 
-import ru.majestic.bashimreader.cache.IQuotesCacher;
-import ru.majestic.bashimreader.cache.impl.EmptyQuotesCacher;
 import ru.majestic.bashimreader.parsers.IQuotesPageParser;
 import ru.majestic.bashimreader.parsers.impl.BestQuotesPageParser;
 import ru.majestic.bashimreader.quotes.sections.IQuoteSectionManagerSkeleton;
@@ -23,11 +21,6 @@ public class BestQuotesSectionManager extends IQuoteSectionManagerSkeleton {
    public void loadNextPage() {
       newQuotesPrepearing = true;
       pageLoader.load(generateNextPageDownloadUrl());
-   }
-
-   @Override
-   protected IQuotesCacher getQuotesCacher() {
-      return new EmptyQuotesCacher();
    }
    
    @Override

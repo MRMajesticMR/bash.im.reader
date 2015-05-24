@@ -2,14 +2,12 @@ package ru.majestic.bashimreader.quotes.sections.impl;
 
 import java.util.List;
 
-import android.os.AsyncTask;
-import ru.majestic.bashimreader.cache.IQuotesCacher;
-import ru.majestic.bashimreader.cache.impl.EmptyQuotesCacher;
 import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.datebase.IQuotesDatabaseHelper;
 import ru.majestic.bashimreader.parsers.IQuotesPageParser;
 import ru.majestic.bashimreader.parsers.impl.NullQuotesPageParser;
 import ru.majestic.bashimreader.quotes.sections.IQuoteSectionManagerSkeleton;
+import android.os.AsyncTask;
 
 public class LikedQuotesSectionManager extends IQuoteSectionManagerSkeleton {
 
@@ -53,11 +51,6 @@ public class LikedQuotesSectionManager extends IQuoteSectionManagerSkeleton {
    @Override
    protected IQuotesPageParser getQuotesPageParser() {
       return new NullQuotesPageParser();
-   }
-
-   @Override
-   protected IQuotesCacher getQuotesCacher() {
-      return new EmptyQuotesCacher();
    }
    ///////////////////////////////
 }

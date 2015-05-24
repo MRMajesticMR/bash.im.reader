@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import ru.majestic.bashimreader.cache.IQuotesCacher;
+import ru.majestic.bashimreader.cache.impl.EmptyQuotesCacher;
 import ru.majestic.bashimreader.cache.listeners.QuotesCacheStatusListener;
 import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.loaders.IPageLoader;
@@ -186,9 +187,12 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 	   return new EmptyQuotePageCountParser();
 	}
 	
+	protected IQuotesCacher getQuotesCacher() {
+      return new EmptyQuotesCacher();
+   }
+	
 	protected abstract String             generateNextPageDownloadUrl   ();
-	protected abstract IQuotesPageParser  getQuotesPageParser           (); 
-	protected abstract IQuotesCacher      getQuotesCacher               ();
+	protected abstract IQuotesPageParser  getQuotesPageParser           (); 	
 
    @Override
    public void onQuotesSaved() {

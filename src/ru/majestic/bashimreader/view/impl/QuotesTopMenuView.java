@@ -61,6 +61,10 @@ public class QuotesTopMenuView extends ITopMenuViewSkeleton implements OnClickLi
       case QuoteSectionManagersFactory.SECTION_TYPE_ABYSS:
          sectionTitle.setText("Бездна");
          break;      
+      
+      case QuoteSectionManagersFactory.SECTION_TYPE_ABYSS_TOP:
+         sectionTitle.setText("Топ бездны");
+         break;      
       }
    }
 

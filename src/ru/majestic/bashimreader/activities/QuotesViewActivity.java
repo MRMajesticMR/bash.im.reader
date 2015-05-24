@@ -294,13 +294,10 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
          break;
       case R.id.quotes_view_menu_btn_abyss_top:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_ABYSS_TOP_BTN_PRESSED);
-         // isNewList = true;
-         // quotesListView.setVisibility(View.GONE);
-         // quotesManager.clearList();
-         // quotesManager.setState(QuotesManager.STATE_ABYSS_TOP);
-         // quotesManager.loadCitations();
-         // refreshListTitle();
-         // quotesMenu.toggleMenu();
+
+         quoteSectionManagersFactory.setCurrentSectionType(QuoteSectionManagersFactory.SECTION_TYPE_ABYSS_TOP);         
+         quotesMenu.toggleMenu();
+         reloadQuotesList();
          break;
 
       case R.id.quotes_view_menu_btn_abyss_best:

@@ -10,7 +10,7 @@ import org.jsoup.select.Elements;
 import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.parsers.IQuotesPageParserSkeleton;
 
-public class AbyssTopQuotesPageParser extends IQuotesPageParserSkeleton {      
+public class AbyssBestQuotesParser extends IQuotesPageParserSkeleton {      
 
    @Override
    protected List<Quote> parsePageContent(String pageContent) throws IllegalArgumentException {
@@ -21,12 +21,11 @@ public class AbyssTopQuotesPageParser extends IQuotesPageParserSkeleton {
       } catch (Exception e) {
          throw new IllegalAccessError(e.toString());
       }
-   }   
-   
+   }      
    
    private List<Quote> getQuotesFromPage(Document doc) {
       final Elements texts    = doc.getElementsByClass("text");
-      final Elements dates    = doc.getElementsByClass("abysstop-date");
+      final Elements dates    = doc.getElementsByClass("date");
 
       final List<Quote> downloadedQuotes = new ArrayList<Quote>();
       

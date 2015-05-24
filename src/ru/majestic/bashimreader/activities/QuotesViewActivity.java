@@ -172,36 +172,6 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
          quickMenuRandomQuotesBtn.setOnClickListener(this);
    }
 
-   // private final void refreshListTitle() {
-   // switch (quotesManager.getState()) {
-   // case QuotesManager.STATE_BEST_QUOTES:
-   // listTitle.setText("Лучшие");
-   // break;
-   // case QuotesManager.STATE_NEW_QUOTES:
-   // listTitle.setText("Новые");
-   // break;
-   // case QuotesManager.STATE_RANDOM_QUOTES:
-   // listTitle.setText("Случайные");
-   // break;
-   // case QuotesManager.STATE_BY_RATING_QUOTES:
-   // listTitle.setText("По рейтингу");
-   // break;
-   // case QuotesManager.STATE_LIKED_QUOTES:
-   // listTitle.setText("Понравившиеся");
-   // break;
-   //
-   // case QuotesManager.STATE_ABYSS:
-   // listTitle.setText("Бездна");
-   // break;
-   // case QuotesManager.STATE_ABYSS_TOP:
-   // listTitle.setText("Топ бездны");
-   // break;
-   // case QuotesManager.STATE_ABYSS_BEST:
-   // listTitle.setText("Лучшее бездны");
-   // break;
-   // }
-   // }
-
    @Override
    public void onStart() {
       super.onStart();
@@ -302,13 +272,10 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
       case R.id.quotes_view_menu_btn_abyss_best:
          FlurryAgent.logEvent(FlurryLogEventsDictionary.QUOTES_ACTIVITY_ABYSS_BEST_BTN_PRESSED);
-         // isNewList = true;
-         // quotesListView.setVisibility(View.GONE);
-         // quotesManager.clearList();
-         // quotesManager.setState(QuotesManager.STATE_ABYSS_BEST);
-         // quotesManager.loadCitations();
-         // refreshListTitle();
-         // quotesMenu.toggleMenu();
+         
+         quoteSectionManagersFactory.setCurrentSectionType(QuoteSectionManagersFactory.SECTION_TYPE_ABYSS_BEST);         
+         quotesMenu.toggleMenu();
+         reloadQuotesList();
          break;
 
       case R.id.quotes_view_quick_menu_btn_abyss_best:
@@ -436,14 +403,12 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
 
    @Override
    public void onLoadLikedQuotesError() {
-      // TODO Auto-generated method stub
-      
+      //. 
    }
 
    @Override
    public void onLoadedLikedQuotes(List<Quote> quotes) {
-      // TODO Auto-generated method stub
-      
+      //.      
    }
 
 }

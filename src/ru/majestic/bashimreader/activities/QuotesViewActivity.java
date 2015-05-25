@@ -4,8 +4,8 @@ import java.util.List;
 
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.ads.IAdManager;
+import ru.majestic.bashimreader.ads.impl.AppodealAdManager;
 import ru.majestic.bashimreader.data.Quote;
-import ru.majestic.bashimreader.datebase.IDatabaseHelper;
 import ru.majestic.bashimreader.datebase.impl.DatabaseHelper;
 import ru.majestic.bashimreader.flurry.utils.FlurryLogEventsDictionary;
 import ru.majestic.bashimreader.menu.QuotesMenu;
@@ -94,9 +94,9 @@ public class QuotesViewActivity extends Activity implements OnClickListener,
       topMenuView = new QuotesTopMenuView(this);
       topMenuView.setTopMenuStateListener(this);
 
-      // adManager = new AppodealAdManager(this);
-      // adManager.init();
-      // adManager.showBanner();
+      adManager = new AppodealAdManager(this);
+      adManager.init();
+      adManager.showBanner();
       
       quoteSectionManagersFactory = new QuoteSectionManagersFactory();
       quoteSectionManagersFactory.restoreState(savedInstanceState);

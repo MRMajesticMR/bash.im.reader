@@ -5,6 +5,7 @@ import java.util.List;
 
 import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.datebase.ILikedQuotesDatabaseHelper;
+import ru.majestic.bashimreader.datebase.exceptions.ChangeTableException;
 import ru.majestic.bashimreader.datebase.tables.ITable;
 import ru.majestic.bashimreader.datebase.tables.LikedQuotesTable;
 import android.database.Cursor;
@@ -71,7 +72,12 @@ public class LikedQuotesDatabaseHelper implements ILikedQuotesDatabaseHelper {
 
    @Override
    public void clearLikedQuotes() {
-      // TODO Auto-generated method stub      
+      try {
+         getHelperTable().deleteTable(dbHelper.getWritableDatabase());
+         getHelperTable().createTable(dbHelper.getWritableDatabase());
+      } catch (ChangeTableException e) {
+         Log.e("DATABASE", "Liked quotes table delete error. " + e.toString());
+      }
    }
    
    private Quote cursorToQuote(Cursor cursor) {

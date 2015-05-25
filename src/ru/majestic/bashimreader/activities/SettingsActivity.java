@@ -3,6 +3,7 @@ package ru.majestic.bashimreader.activities;
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.billing.GoogleBillingManager;
 import ru.majestic.bashimreader.datebase.QuotesDatebaseManager;
+import ru.majestic.bashimreader.datebase.impl.DatabaseHelper;
 import ru.majestic.bashimreader.managers.QuotesManager;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
 import ru.majestic.bashimreader.utils.ApplicationUtils;
@@ -122,7 +123,7 @@ public class SettingsActivity extends Activity implements 	OnClickListener,
 			break;
 			
 		case R.id.settings_btn_cache_clear_liked_quotes:
-			quotesManager.getQuotesDatebaseManager().deleteCache(QuotesDatebaseManager.Type.LIKED);
+			DatabaseHelper.getInstance().getLikedQuotesDatabaseHelper().clearLikedQuotes();
 			Toast.makeText(this, "Понравившиеся цитаты удалены из кэша", Toast.LENGTH_SHORT).show();
 			break;
 			

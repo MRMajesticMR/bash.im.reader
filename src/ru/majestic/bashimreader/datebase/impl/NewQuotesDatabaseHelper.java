@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import ru.majestic.bashimreader.data.Quote;
 import ru.majestic.bashimreader.datebase.INewQuotesDatabaseHelper;
+import ru.majestic.bashimreader.datebase.exceptions.ChangeTableException;
 import ru.majestic.bashimreader.datebase.tables.ITable;
 import ru.majestic.bashimreader.datebase.tables.LikedQuotesTable;
 import ru.majestic.bashimreader.datebase.tables.NewQuotesTable;
@@ -73,8 +74,12 @@ public class NewQuotesDatabaseHelper implements INewQuotesDatabaseHelper {
 
    @Override
    public void clearNewQuotes() {
-      // TODO Auto-generated method stub
-      
+      try {
+         getHelperTable().deleteTable(dbHelper.getWritableDatabase());
+         getHelperTable().createTable(dbHelper.getWritableDatabase());
+      } catch (ChangeTableException e) {
+         Log.e("DATABASE", "Liked quotes table delete error. " + e.toString());
+      }
    }
 
    @Override

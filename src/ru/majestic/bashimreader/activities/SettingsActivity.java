@@ -2,9 +2,7 @@ package ru.majestic.bashimreader.activities;
 
 import ru.majestic.bashimreader.R;
 import ru.majestic.bashimreader.billing.GoogleBillingManager;
-import ru.majestic.bashimreader.datebase.QuotesDatebaseManager;
 import ru.majestic.bashimreader.datebase.impl.DatabaseHelper;
-import ru.majestic.bashimreader.managers.QuotesManager;
 import ru.majestic.bashimreader.preference.ApplicationSettings;
 import ru.majestic.bashimreader.utils.ApplicationUtils;
 import android.app.Activity;
@@ -45,13 +43,11 @@ public class SettingsActivity extends Activity implements 	OnClickListener,
 	private Button 			toggleNightModeBtn;
 	private Button			disableAdsBtn;
 
-	private QuotesManager 			quotesManager;
 	private ApplicationSettings 	applicationSettings;	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		quotesManager 			= new QuotesManager(savedInstanceState, this);
 		applicationSettings 	= new ApplicationSettings(this);								
 		initGUI();				
 	}			
@@ -118,7 +114,7 @@ public class SettingsActivity extends Activity implements 	OnClickListener,
 			break;
 			
 		case R.id.settings_btn_cache_clear_new_quotes:
-			quotesManager.getQuotesDatebaseManager().deleteCache(QuotesDatebaseManager.Type.NEW);
+			DatabaseHelper.getInstance().getNewQuotesDatabaseHelper().clearNewQuotes();
 			Toast.makeText(this, "Новые цитаты удалены из кэша", Toast.LENGTH_SHORT).show();
 			break;
 			

@@ -18,6 +18,9 @@ import ru.majestic.bashimreader.parsers.listeners.OnQuotesPageCountParsedListene
 import ru.majestic.bashimreader.parsers.listeners.OnQuotesPagesParsedListener;
 import ru.majestic.bashimreader.parsers.pagecont.IQuotesPageCountParser;
 import ru.majestic.bashimreader.parsers.pagecont.impl.EmptyQuotePageCountParser;
+import ru.majestic.bashimreader.quotes.filters.IQuotesFilter;
+import ru.majestic.bashimreader.quotes.filters.impl.NullQuotesFilter;
+import ru.majestic.bashimreader.quotes.filters.listeners.OnQuotesFilteredListener;
 import ru.majestic.bashimreader.quotes.sections.listeners.OnNewQuotesReadyListener;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,13 +29,13 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
                                                                OnPageLoadListener, 
                                                                OnQuotesPagesParsedListener,
                                                                OnQuotesPageCountParsedListener,
-                                                               QuotesCacheStatusListener {
+                                                               QuotesCacheStatusListener,
+                                                               OnQuotesFilteredListener {
 
    private static final String CITATION_CURRENT_PAGE_COUNT     = "CITATION_CURRENT_PAGE_COUNT";
    private static final String SAVED_QUOTES                    = "SAVED_QUOTES";
    
-	private List<Quote>                quotes;
-	
+	protected List<Quote>              quotes;	
 	protected int                      nextPage;
    protected String                   lastLoadPageContent;   
    protected int                      maxPageCount;
@@ -40,6 +43,7 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
    protected IQuotesPageParser        quotesPageParser;
    protected IQuotesPageCountParser   quotePageCountParser;
    protected IQuotesCacher            quotesCacher;   
+   protected IQuotesFilter            quotesFilter;
    protected boolean                  newQuotesPrepearing;   
 	protected OnNewQuotesReadyListener onNewQuotesReadyListener;
 	
@@ -58,7 +62,12 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 		
 		quotesCacher = getQuotesCacher();
 		quotesCacher.setQuotesCacheStatusListener(this);
+		
+		quotesFilter = getQuotesFilter();
+		quotesFilter.setOnQuotesFilteredListener(this);
 	}
+	
+	
 	
 	public boolean isNeedLoadMorePage() {
 	   return true;
@@ -152,11 +161,7 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
    
    @Override
    public void onQuotesPageParsed(List<Quote> quotes) {
-      this.nextPage = changeNextPage(getNextPage());
-      this.quotes.addAll(quotes);
-      this.quotesCacher.saveQuotes(quotes);     
-      this.onNewQuotesReadyListener.onNewQuoteReady(quotes);
-      this.newQuotesPrepearing = false;
+      quotesFilter.startFilter(quotes);      
    }
 
    @Override
@@ -191,6 +196,10 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
       return new EmptyQuotesCacher();
    }
 	
+	protected IQuotesFilter getQuotesFilter() {
+      return new NullQuotesFilter();
+   }
+	
 	@Override
    public void onQuotesSaved() {
       Log.i("CACHER_LISTENER", "Quotes saved in cache");
@@ -198,13 +207,22 @@ public abstract class IQuoteSectionManagerSkeleton implements IQuotesSectionMana
 
    @Override
    public void onQuotesLoaded(List<Quote> quotes) {
+      this.quotes.addAll(quotes);
       this.onNewQuotesReadyListener.onNewQuoteReady(quotes);
       this.newQuotesPrepearing = false;
-   }
-   
+   }      
+
+   @Override
+   public void onQuotesFiltered(List<Quote> filteredQuotes) {
+      this.nextPage = changeNextPage(getNextPage());
+      this.quotes.addAll(filteredQuotes);
+      this.quotesCacher.saveQuotes(filteredQuotes);     
+      this.onNewQuotesReadyListener.onNewQuoteReady(filteredQuotes);
+      this.newQuotesPrepearing = false;
+   }    
+
+
    protected abstract String             generateNextPageDownloadUrl   ();
-   protected abstract IQuotesPageParser  getQuotesPageParser           ();    
-
-
+   protected abstract IQuotesPageParser  getQuotesPageParser           ();
 	
 }
